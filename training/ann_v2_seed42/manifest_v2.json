@@ -1,0 +1,12 @@
+{
+  "env_id": "Ant-v5",
+  "max_episode_steps": 500,
+  "seed": 42,
+  "train_reward": {
+    "healthy_reward": 0.25,
+    "forward_reward_weight": 2.0,
+    "ctrl_cost_weight": 0.5
+  },
+  "total_timesteps": 303104,
+  "saved_utc": "2026-11-12T17:10:03.373135+00:00"
+}
