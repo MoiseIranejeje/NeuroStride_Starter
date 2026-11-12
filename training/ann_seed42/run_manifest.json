@@ -1,0 +1,13 @@
+{
+  "environment": "Ant-v5",
+  "episode_limit": 500,
+  "controller": "ANN MlpPolicy/PPO",
+  "seed": 42,
+  "total_timesteps_reported": 20480,
+  "observation_normalization": true,
+  "reward_normalization": false,
+  "saved_at_utc": "2026-11-12T15:50:22.420516+00:00",
+  "gymnasium_version": "1.4.0",
+  "stable_baselines3_version": "2.9.2",
+  "torch_version": "2.15.0+cpu"
+}

@@ -1,0 +1,3 @@
+# Milestone 1 only: physics simulation, not SNN or PPO training.
+gymnasium[mujoco]>=1.1,<2
+numpy>=1.26,<3

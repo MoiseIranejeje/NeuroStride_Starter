@@ -1,0 +1,4 @@
+# Install into the existing Python 3.11 environment after Milestone 1.
+# Keep your original requirements.txt unchanged.
+stable-baselines3==2.9.2
+tensorboard>=2.17,<3
