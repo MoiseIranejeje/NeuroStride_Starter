@@ -1,0 +1,9 @@
+{
+  "additional_v6_steps": 20000,
+  "success_rate": 0.7,
+  "mean_survival_steps": 500,
+  "mean_forward_m": 3.8543852463434116,
+  "mean_abs_sideways_m": 1.2734859742733868,
+  "mean_cumulative_abs_lateral_motion_m": 11.218391933937506,
+  "selection_score": 1014.3528451841343
+}

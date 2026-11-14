@@ -1,0 +1,30 @@
+{
+  "version": "ANN V5",
+  "initial_controller": "training\\ann_v4_seed42\\best_model.zip",
+  "initial_norm": "training\\ann_v4_seed42\\best_vecnormalize.pkl",
+  "initial_v4_steps": 25000,
+  "new_steps_requested": 50000,
+  "seed": 42,
+  "env": "Ant-v5",
+  "reward_change": "-0.5 * abs(y_velocity)",
+  "ret_rms_reset": false,
+  "evaluation_seeds": [
+    1100,
+    1101,
+    1102,
+    1103,
+    1104
+  ],
+  "test_seeds_reserved": [
+    2000,
+    2001,
+    2002,
+    2003,
+    2004,
+    2005,
+    2006,
+    2007,
+    2008,
+    2009
+  ]
+}

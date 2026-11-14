@@ -1,0 +1,37 @@
+{
+  "experiment": "NeuroStride ANN V6",
+  "initial_model": "training\\ann_v5_seed42\\best_model.zip",
+  "initial_vecnormalize": "training\\ann_v5_seed42\\best_vecnormalize.pkl",
+  "starting_model_total_steps": 35000,
+  "additional_training_steps_requested": 30000,
+  "one_training_change": "PPO learning_rate",
+  "old_learning_rate": 0.0003,
+  "new_learning_rate": 5e-05,
+  "training_reward": "Ant-v5 reward - 0.5 * abs(y_velocity)",
+  "validation_seeds": [
+    1200,
+    1201,
+    1202,
+    1203,
+    1204,
+    1205,
+    1206,
+    1207,
+    1208,
+    1209
+  ],
+  "held_out_test_seeds_not_used": [
+    2000,
+    2001,
+    2002,
+    2003,
+    2004,
+    2005,
+    2006,
+    2007,
+    2008,
+    2009
+  ],
+  "eval_max_steps": 500,
+  "success": "500 steps and forward>=3m and abs(sideways)<=2m"
+}

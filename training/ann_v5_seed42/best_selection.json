@@ -1,0 +1,8 @@
+{
+  "additional_steps": 10000,
+  "mean_survival": 500,
+  "mean_forward_m": 3.420274121494459,
+  "mean_abs_sideways_m": 1.635646522714602,
+  "success_rate": 0.4,
+  "selection_score": 702.0490172027431
+}
