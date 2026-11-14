@@ -1,0 +1,15 @@
+{
+  "training_steps": 25000,
+  "selection_score": 485.32562709539286,
+  "success_rate": 0.2,
+  "mean_survival": 500,
+  "mean_forward_m": 2.658020769393602,
+  "mean_abs_sideways_m": 1.7834788292479162,
+  "validation_seeds": [
+    1000,
+    1001,
+    1002,
+    1003,
+    1004
+  ]
+}
