@@ -25,6 +25,12 @@ MODELS = {
         Path("training/ann_v2_seed42/ann_ppo_ant_v2.zip"),
         Path("training/ann_v2_seed42/ann_vecnormalize_v2.pkl"),
     ),
+
+    "ann_v3": (
+        Path("training/ann_v3_seed42/ann_ppo_ant_v3.zip"),
+        Path("training/ann_v3_seed42/ann_vecnormalize_v3.pkl"),
+    ),
+
 }
 
 
@@ -197,13 +203,16 @@ def main():
 
     parser.add_argument(
         "--controller",
-        choices=[
-            "all",
-            "ann_v1",
-            "ann_v2",
-            "random",
-            "zero",
-        ],
+        
+choices=[
+    "all",
+    "ann_v1",
+    "ann_v2",
+    "ann_v3",
+    "random",
+    "zero",
+],
+
         default="all",
     )
 

@@ -1,0 +1,29 @@
+{
+  "project": "NeuroStride",
+  "experiment": "ANN_V3A",
+  "environment": "Ant-v5",
+  "algorithm": "PPO",
+  "network_architecture": [
+    256,
+    256
+  ],
+  "reward_config": {
+    "healthy_reward": 1.0,
+    "forward_reward_weight": 2.0,
+    "ctrl_cost_weight": 0.5
+  },
+  "ppo_config": {
+    "learning_rate": 0.0003,
+    "n_steps": 2048,
+    "batch_size": 256,
+    "n_epochs": 10,
+    "gamma": 0.99,
+    "gae_lambda": 0.95,
+    "clip_range": 0.2,
+    "ent_coef": 0.0
+  },
+  "seed": 42,
+  "max_episode_steps": 500,
+  "total_environment_steps": 51200,
+  "saved_at_utc": "2026-11-12T19:06:37.160286+00:00"
+}
