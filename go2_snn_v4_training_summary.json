@@ -1,0 +1,21 @@
+{
+  "training_type": "Supervised SNN imitation/DAgger, NOT PPO",
+  "checkpoint_source": "results/go2_snn_v3/go2_snn_v3_best.pt",
+  "training_samples": 4131,
+  "steering_train_seed": 4101,
+  "steering_validation_seed": 4102,
+  "validation_samples": 1600,
+  "epoch_selected": 25,
+  "v3_start_val_steering_rmse": 0.11313975602388382,
+  "v4_best_val_steering_rmse": 0.0858960673213005,
+  "v3_start_old_walking_rmse": 0.0947674810886383,
+  "v4_best_old_walking_rmse": 0.07806073129177094,
+  "per_behavior_held_seed_metrics": {
+    "val_steering_4102_rmse": 0.0858960673213005,
+    "val_straight_rmse": 0.08084709942340851,
+    "val_turn_left_rmse": 0.08654070645570755,
+    "val_turn_right_rmse": 0.09324707090854645,
+    "val_heading_hold_rmse": 0.0824134573340416
+  },
+  "note": "Selection seed 4102 is very similar to training seed 4101; offline RMSE is not closed-loop ability."
+}
