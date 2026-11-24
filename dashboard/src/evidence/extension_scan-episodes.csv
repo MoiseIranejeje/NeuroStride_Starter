@@ -1,0 +1,13 @@
+mode,seed,command_mps,duration_s,forward_m,sideways_m,peak_cross_track_m,abs_final_lateral_per_forward,max_abs_yaw_deg,pitch_rms_deg,roll_rms_deg,minimum_root_height_m,mean_root_height_after_075s_m,mean_visual_top_height_after_075s_m,visual_top_height_std_m,mean_abs_top_height_error_from_40cm_m,mean_extension_after_075s_rad,height_neural_spike_rate_last,torque_clip_fraction,pass_15deg,pass_10deg,pass_5deg,stop,replay
+baseline,7601,0.45,8.0,2.29052,0.0952,0.10135,0.041563,7.163,6.8865,1.6997,0.24054,0.27941,0.35855,0.00779,0.04145,0.0,0.0,0.0,True,True,False,completed,replays/baseline_v0.45_seed7601.npz
+fixed04,7601,0.45,8.0,2.53266,0.06332,0.09363,0.025002,9.2876,6.8907,1.8085,0.24517,0.28697,0.36612,0.00724,0.03388,0.04,0.0,0.0,True,True,False,completed,replays/fixed04_v0.45_seed7601.npz
+fixed08,7601,0.45,8.0,2.73763,0.12122,0.12331,0.044279,7.2248,6.8851,1.7944,0.25102,0.29441,0.37359,0.00654,0.02641,0.08,0.0,0.0,True,True,False,completed,replays/fixed08_v0.45_seed7601.npz
+fixed12,7601,0.45,8.0,3.04817,0.33967,0.33967,0.111436,4.7679,6.9,1.8161,0.25934,0.30174,0.3811,0.00547,0.0189,0.12,0.0,0.0,False,False,False,completed,replays/fixed12_v0.45_seed7601.npz
+baseline,7602,0.45,8.0,2.31479,0.10625,0.11204,0.045901,7.8197,6.8522,1.6015,0.23866,0.27929,0.35845,0.00786,0.04155,0.0,0.0,0.0,True,True,False,completed,replays/baseline_v0.45_seed7602.npz
+fixed04,7602,0.45,8.0,2.52991,0.09975,0.10754,0.03943,7.8157,6.8343,1.4665,0.24583,0.28696,0.36597,0.00701,0.03403,0.04,0.0,0.0,True,True,False,completed,replays/fixed04_v0.45_seed7602.npz
+fixed08,7602,0.45,8.0,2.72559,0.20433,0.21138,0.074967,5.9714,6.824,1.5758,0.25262,0.29423,0.37337,0.00659,0.02663,0.08,0.0,0.0,True,True,False,completed,replays/fixed08_v0.45_seed7602.npz
+fixed12,7602,0.45,8.0,3.01174,0.2964,0.2964,0.098415,6.1548,6.8751,1.6795,0.25665,0.30145,0.38077,0.00574,0.01923,0.12,0.0,0.0,False,False,False,completed,replays/fixed12_v0.45_seed7602.npz
+baseline,7603,0.45,8.0,2.33175,0.08124,0.09808,0.034839,7.7683,6.9145,1.5915,0.24175,0.27955,0.35873,0.00786,0.04127,0.0,0.0,0.0,True,True,False,completed,replays/baseline_v0.45_seed7603.npz
+fixed04,7603,0.45,8.0,2.51282,0.07359,0.09095,0.029287,7.384,6.8986,1.7479,0.2461,0.28695,0.36621,0.00708,0.03379,0.04,0.0,0.0,True,True,False,completed,replays/fixed04_v0.45_seed7603.npz
+fixed08,7603,0.45,8.0,2.71714,0.17315,0.17315,0.063726,6.6296,6.812,1.7389,0.25213,0.29445,0.37356,0.0064,0.02644,0.08,0.0,0.0,True,True,False,completed,replays/fixed08_v0.45_seed7603.npz
+fixed12,7603,0.45,8.0,2.98385,0.34532,0.34532,0.115731,5.0412,6.8845,1.6394,0.25887,0.30142,0.38076,0.00553,0.01924,0.12,0.0,0.0,False,False,False,completed,replays/fixed12_v0.45_seed7603.npz
