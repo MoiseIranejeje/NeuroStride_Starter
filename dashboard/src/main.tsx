@@ -79,6 +79,7 @@ function modeLabel(mode: string) {
 }
 
 const original = upright.find(row => row.mode === 'baseline')!
+const smallOffset = scan.find(row => row.mode === 'fixed04')!
 const neural = upright.find(row => row.mode === 'neural')!
 
 function App() {
@@ -98,7 +99,7 @@ function App() {
             <span>NEURO<span className="brand-weight">STRIDE</span></span>
           </a>
           <nav aria-label="Site navigation" className="site-nav">
-            <a href="#story">Research question</a>
+            <a href="#story">Iterate</a>
             <a href="#results">Results</a>
             <a href="#methods">Protocol</a>
             <a href="#episodes">Recordings</a>
@@ -115,7 +116,7 @@ function App() {
               <h1 id="hero-heading">Spiking neural control<br /><em>of Unitree Go2.</em></h1>
               <p className="hero-description">We investigate whether spiking neural network (SNN) controllers can maintain forward locomotion, heading, and lateral path accuracy as the Go2 leg posture changes. The experiments compare fixed knee-extension offsets with a separately trained spiking height-feedback controller in MuJoCo.</p>
               <div className="hero-actions">
-                <a className="primary-link" href="#story">Research question <span aria-hidden="true">↘</span></a>
+                <a className="primary-link" href="#story">Explore the iterations <span aria-hidden="true">↘</span></a>
               </div>
             </div>
             <div className="hero-visuals">
@@ -144,9 +145,9 @@ function App() {
 
         <section className="story-section container section" id="story" aria-labelledby="story-title">
           <div className="section-intro">
-            <p className="eyebrow section-index">01 — RESEARCH QUESTION</p>
+            <p className="eyebrow section-index">01 — ITERATE</p>
             <h2 id="story-title">How does leg extension<br />affect SNN locomotion?</h2>
-            <p className="section-lede">We hold the existing gait and yaw spiking networks fixed and vary the leg-extension control. One experiment uses fixed knee offsets; another uses a new spiking network trained to imitate an analytic height-and-vertical-velocity feedback law. We measure visual height, torso tilt, heading and lateral drift in matched simulation starts.</p>
+            <p className="section-lede">Can the Go2 walk taller and still stay on course? We kept the gait and heading networks fixed and changed how much the knees extend. Each configuration ran on the same three MuJoCo development seeds.</p>
           </div>
           <div className="story-grid">
             <article className="story-card">
@@ -157,21 +158,25 @@ function App() {
               <span className="card-outcome positive">3 of 3 passed all criteria (10° heading limit)</span>
             </article>
             <article className="story-card">
-              <span className="card-step">MEAN TOP-OF-ROBOT HEIGHT</span>
-              <strong className="card-number">{fmtCm(neural.mean_visual_top_height_m)}<small> cm</small></strong>
-              <h3>Neural height feedback</h3>
-              <p>A spiking neural network adjusts knee extension using the gap between actual and target body height and how fast the body moves up or down. Mean height rose from 35.86 cm.</p>
-              <span className="card-outcome neutral">3 of 3 completed the 8-second run</span>
+              <span className="card-step">MEAN FINAL SIDEWAYS DRIFT</span>
+              <strong className="card-number">{fmtCm(smallOffset.mean_abs_final_y_m)}<small> cm</small></strong>
+              <h3>Test fixed knee offsets</h3>
+              <p>We used fixed offsets to see how a taller stance affected walking. At +0.04 rad, the Go2 stood slightly taller and passed all three runs. At +0.12 rad, all three runs failed.</p>
+              <a className="card-outcome story-link" href="#results" onClick={() => {
+                setStudyId('extension_scan')
+                setMetricId('drift')
+              }}>Compare fixed offsets <span aria-hidden="true">↘</span></a>
             </article>
             <article className="story-card story-card-critical">
-              <span className="card-step">MEAN FINAL SIDEWAYS DRIFT</span>
-              <strong className="card-number">{fmtCm(neural.mean_abs_final_y_m)}<small> cm</small></strong>
-              <h3>Path tracking with height feedback</h3>
-              <p>Average peak heading error dropped to 3.19°. Sideways drift still increased from the 9.42 cm baseline, and every run exceeded the 25 cm limit.</p>
+              <span className="card-step">MEAN TOP-OF-ROBOT HEIGHT</span>
+              <strong className="card-number">{fmtCm(neural.mean_visual_top_height_m)}<small> cm</small></strong>
+              <h3>Try neural height feedback</h3>
+              <p>A separate spiking network adjusted knee extension from body-height error and vertical speed. Mean height rose from {fmtCm(original.mean_visual_top_height_m)} cm and peak heading error fell on average. Mean final sideways drift reached {fmtCm(neural.mean_abs_final_y_m)} cm, and every run exceeded the 25 cm limit.</p>
               <span className="card-outcome negative">0 of 3 passed all criteria</span>
+              <a className="story-link" href="#episodes">See the seed 7601 replay <span aria-hidden="true">↘</span></a>
             </article>
           </div>
-          <div className="insight-line"><span aria-hidden="true">↳</span><p><strong>Measured outcome:</strong> the height-feedback SNN raised mean rendered height by 3.63 cm and reduced mean peak yaw from 7.58° to 3.19°, while mean final lateral displacement increased from 9.42 cm to 65.33 cm. The combined straight-walking task failed (0/3 runs).</p></div>
+          <div className="insight-line"><span aria-hidden="true">↳</span><p><strong>Next experiment.</strong> Adapt the gait controller to the taller stance, then test on fresh seeds to see whether the Go2 can maintain its height and stay within the heading and sideways-drift limits.</p></div>
         </section>
 
         <section className="lab-section" id="results" aria-labelledby="results-title">
@@ -297,7 +302,6 @@ function App() {
               <p>Visual height is the highest rendered-mesh point after the first 0.75 s, not the torso-origin height. Only three development starts at 0.45 m/s on flat terrain were examined. Generalization, foot-contact mechanisms and real hardware have not been established.</p>
             </article>
           </div>
-          <div className="method-callout"><span className="eyebrow">NEXT TEST</span><p>Adapt the locomotion controller to the taller nominal stance and test on new seeds, with height, heading error and lateral displacement evaluated together.</p></div>
         </section>
 
         <section className="episodes-section" id="episodes" aria-labelledby="episodes-title">
