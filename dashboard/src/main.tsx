@@ -116,7 +116,6 @@ function App() {
               <p className="hero-description">We investigate whether spiking neural network (SNN) controllers can maintain forward locomotion, heading, and lateral path accuracy as the Go2 leg posture changes. The experiments compare fixed knee-extension offsets with a separately trained spiking height-feedback controller in MuJoCo.</p>
               <div className="hero-actions">
                 <a className="primary-link" href="#story">Research question <span aria-hidden="true">↘</span></a>
-                <span className="hero-meta">Flat ground · 0.45 m/s command · 8 s · 3 seeds per mode</span>
               </div>
             </div>
             <div className="hero-visuals">
