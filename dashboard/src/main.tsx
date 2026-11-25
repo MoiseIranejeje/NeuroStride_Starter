@@ -44,31 +44,25 @@ const metrics = {
     label: 'Final sideways offset',
     short: 'Lateral drift',
     unit: 'cm',
-    scale: 100,
-    reference: 25,
     referenceLabel: '25 cm run limit',
     value: (row: EvidenceRow) => row.mean_abs_final_y_m * 100,
-    note: 'The dashed line marks the 25 cm final-offset limit for an individual run. Bars show averages; the pass counts use every criterion on individual runs.',
+    note: 'The dotted line marks the 25 cm limit. A point above it means the robot finished too far sideways on that run.',
   },
   height: {
     label: 'Rendered visual height',
     short: 'Visual height',
     unit: 'cm',
-    scale: 45,
-    reference: 40,
     referenceLabel: '40 cm nominal height',
     value: (row: EvidenceRow) => row.mean_visual_top_height_m * 100,
-    note: 'The 40 cm line is the manufacturer’s nominal overall standing height. These bars measure the top of the rendered MuJoCo mesh, not the torso origin or physical hardware.',
+    note: 'The 40 cm line is the manufacturer’s nominal overall standing height. The points measure the average height of the top of the rendered robot after the first 0.75 seconds.',
   },
   yaw: {
     label: 'Mean peak heading error',
     short: 'Heading error',
     unit: '°',
-    scale: 12,
-    reference: 10,
     referenceLabel: '10° run limit',
     value: (row: EvidenceRow) => row.mean_peak_yaw_deg,
-    note: 'The dashed line marks the 10° maximum yaw limit for an individual run. Low yaw means the robot is oriented forward; it does not establish low sideways drift.',
+    note: 'The dotted line marks the 10° run limit. Each point is the largest absolute heading error measured during that run.',
   },
 } as const
 
@@ -176,38 +170,6 @@ function EpisodeExplorer() {
         </div>
       </div>
     </section>
-  )
-}
-
-function MetricChart({ metric, rows }: {
-  metric: (typeof metrics)[MetricId]
-  rows: readonly (EvidenceRow & { mode: string })[]
-}) {
-  const lineAt = metric.reference / metric.scale * 100
-  return (
-    <div className="chart" role="group" aria-label={'Comparison of ' + metric.label.toLowerCase()}>
-      <ul className="chart-bars">
-        {rows.map(row => {
-          const value = metric.value(row)
-          return (
-            <li className="chart-row" key={row.mode}>
-              <span className="chart-label">{row.mode === 'neural' ? 'Height-feedback SNN' : modeLabel(row.mode)}</span>
-              <strong className="chart-value">{value.toFixed(2)}<small> {metric.unit}</small></strong>
-              <div className="chart-track" aria-hidden="true">
-                <div className={'chart-fill' + (row.mode === 'neural' ? ' neural' : '')}
-                  style={{ width: Math.min(100, value / metric.scale * 100) + '%' }} />
-                <div className="chart-target" style={{ insetInlineStart: lineAt + '%' }} />
-              </div>
-            </li>
-          )
-        })}
-      </ul>
-      <div className="chart-scale" aria-hidden="true">
-        {[0, .25, .5, .75, 1].map(tick => <span key={tick}>{metric.scale * tick}</span>)}
-      </div>
-      <p className="chart-reference"><span className="marker-key" aria-hidden="true" />{metric.referenceLabel}</p>
-      <p className="chart-note">{metric.note}</p>
-    </div>
   )
 }
 
@@ -355,7 +317,15 @@ function App() {
                 </div>
               </div>
 
-              <MetricChart metric={metric} rows={study.data} />
+              <figure className="study-plot">
+                <img key={studyId + metricId} src={`/media/go2-study-${studyId}-${metricId}.png`}
+                  width="720" height="528" alt={`${metric.label} by development seed for ${study.title}.`} />
+                <figcaption>
+                  <strong>{metric.referenceLabel}</strong>
+                  <p>{metric.note}</p>
+                  <p>Each line follows one controller configuration across three matched seeds. Each point is one run. Open the measurement table for configuration averages or download the episode CSV for exact run values.</p>
+                </figcaption>
+              </figure>
 
               <div className="data-bottom">
                 <div className="data-qualifier"><strong>Full-task pass:</strong> one episode must meet the duration, forward-distance, lateral-position, minimum-root-height and peak-yaw limits together.</div>

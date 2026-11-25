@@ -1,4 +1,4 @@
-"""Plot the matched baseline and height-feedback replays for Iterate seed 7601."""
+"""Plot Iterate episode comparisons and matched replays."""
 import argparse
 import csv
 import hashlib
@@ -21,8 +21,8 @@ def read_trace(path):
         return time, position, replay["pitch_deg"], replay["roll_deg"], np.degrees(yaw - yaw[0])
 
 
-def plot_seed_comparisons(dashboard, media):
-    with (dashboard / "src/evidence/development-episodes.csv").open(newline="") as source:
+def plot_seed_comparisons(dashboard, media, study_id, series, output_prefix):
+    with (dashboard / "src/evidence" / f"{study_id}-episodes.csv").open(newline="") as source:
         rows = list(csv.DictReader(source))
     seeds = [7601, 7602, 7603]
     plots = [
@@ -32,10 +32,7 @@ def plot_seed_comparisons(dashboard, media):
     ]
     for name, field, label, scale, reference in plots:
         fig, ax = plt.subplots(figsize=(4.5, 3.3), layout="constrained")
-        for mode, title, color, style, marker in (
-            ("baseline", "Original controller", "#175b87", "--", "o"),
-            ("neural", "Height-feedback SNN", "#287a50", "-", "s"),
-        ):
+        for mode, title, color, style, marker in series:
             values = {int(row["seed"]): abs(float(row[field])) * scale
                       for row in rows if row["mode"] == mode}
             ax.plot(seeds, [values[seed] for seed in seeds], color=color,
@@ -45,7 +42,7 @@ def plot_seed_comparisons(dashboard, media):
         ax.grid(color="#dfe5e2", alpha=.85)
         ax.set_axisbelow(True)
         ax.legend(loc="lower center", bbox_to_anchor=(.5, 1), fontsize=8, ncol=2)
-        fig.savefig(media / f"go2-seed-comparison-{name}.png", dpi=160)
+        fig.savefig(media / f"{output_prefix}-{name}.png", dpi=160)
         plt.close(fig)
 
 
@@ -90,7 +87,24 @@ def main():
         fig.savefig(media / f"go2-seed7601-{name}.png", dpi=160)
         plt.close(fig)
 
-    plot_seed_comparisons(dashboard, media)
+    original = ("baseline", "Original controller", "#175b87", "--", "o")
+    neural_series = ("neural", "Height-feedback SNN", "#287a50", "-", "s")
+    plot_seed_comparisons(dashboard, media, "development", (original, neural_series),
+                          "go2-seed-comparison")
+    for study_id, modes in (
+        ("extension_scan", (
+            ("fixed04", "+0.04 rad", "#99511b", "-", "^"),
+            ("fixed08", "+0.08 rad", "#6750a4", "--", "D"),
+            ("fixed12", "+0.12 rad", "#287a50", "-", "s"),
+        )),
+        ("development", (
+            ("fixed16", "+0.16 rad", "#99511b", "-", "^"),
+            ("fixed24", "+0.24 rad", "#6750a4", "--", "D"),
+            neural_series,
+        )),
+    ):
+        plot_seed_comparisons(dashboard, media, study_id, (original, *modes),
+                              f"go2-study-{study_id}")
 
     print("Final XY (m):", baseline[1][-1], neural[1][-1])
     print("Saved-frame peak heading error (degrees):", *(np.abs(t[4]).max() for t in (baseline, neural)))
