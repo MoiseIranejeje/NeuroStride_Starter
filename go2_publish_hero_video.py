@@ -88,7 +88,7 @@ def read_replay_provenance(path: Path) -> dict:
     }
 
 
-def make_video(ffmpeg: str, source: Path, target: Path, kind: str, fps: int, width: int, height: int, seconds: float) -> None:
+def make_video(ffmpeg: str, source: Path, target: Path, kind: str, fps: int, width: int, height: int, seconds: float, *, mp4_crf: int = 29) -> None:
     common = [
         ffmpeg, "-y", "-hide_banner", "-loglevel", "error",
         "-i", str(source), "-t", str(seconds), "-an",
@@ -99,7 +99,7 @@ def make_video(ffmpeg: str, source: Path, target: Path, kind: str, fps: int, wid
         args = ["-c:v", "libvpx-vp9", "-deadline", "good", "-cpu-used", "4",
                 "-row-mt", "1", "-b:v", "0", "-crf", "40", str(target)]
     else:
-        args = ["-c:v", "libx264", "-preset", "medium", "-crf", "29",
+        args = ["-c:v", "libx264", "-preset", "medium", "-crf", str(mp4_crf),
                 "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(target)]
     run(common + args)
 

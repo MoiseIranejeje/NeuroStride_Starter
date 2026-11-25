@@ -12,6 +12,7 @@ from go2_publish_hero_video import ROOT, find_ffmpeg, file_sha256, make_video, r
 
 
 DASHBOARD = ROOT / "dashboard"
+WIDTH, HEIGHT, FPS = 960, 540, 20
 STUDIES = {
     "extension_scan": "go2_knee_extension_probe/extension_scan",
     "development": "go2_snn_upright_walk/development",
@@ -35,10 +36,11 @@ def publish(study, source, row, ffmpeg):
         encoded = Path(temp) / "encoded.mp4"
         subprocess.run([
             sys.executable, str(ROOT / "go2_record_front_video.py"), "--replay", str(source),
-            "--out", str(rendered), "--view", "wide", "--fps", "20", "--width", "640",
-            "--height", "368",
+            "--out", str(rendered), "--view", "follow", "--distance", "1.45",
+            "--fps", str(FPS), "--width", str(WIDTH), "--height", str(HEIGHT),
         ], cwd=ROOT, check=True)
-        make_video(ffmpeg, rendered, encoded, "mp4", 20, 640, 368, float(row["duration_s"]))
+        make_video(ffmpeg, rendered, encoded, "mp4", FPS, WIDTH, HEIGHT,
+                   float(row["duration_s"]), mp4_crf=19)
         subprocess.run([ffmpeg, "-v", "error", "-xerror", "-i", str(encoded),
                         "-f", "null", "-"], check=True)
         output.write_bytes(encoded.read_bytes())
@@ -48,6 +50,8 @@ def publish(study, source, row, ffmpeg):
         "source_sha256": provenance["source_sha256"],
         "sha256": file_sha256(output),
         "seconds": provenance["simulation_seconds"],
+        "dimensions_px": [WIDTH, HEIGHT],
+        "camera": "three-quarter tracking",
     }
 
 
