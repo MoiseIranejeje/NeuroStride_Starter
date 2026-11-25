@@ -8,7 +8,7 @@ import uprightSummary from './evidence/development-summary.json?url'
 import uprightEpisodes from './evidence/development-episodes.csv?url'
 import scanEpisodeCsv from './evidence/extension_scan-episodes.csv?raw'
 import uprightEpisodeCsv from './evidence/development-episodes.csv?raw'
-import replayProvenance from '../public/media/go2-hero-provenance.json'
+import episodeVideos from './evidence/episode-videos.json'
 import { HeroVideo } from './HeroVideo'
 import './styles.css'
 
@@ -44,31 +44,25 @@ const metrics = {
     label: 'Final sideways offset',
     short: 'Lateral drift',
     unit: 'cm',
-    scale: 100,
-    reference: 25,
     referenceLabel: '25 cm run limit',
     value: (row: EvidenceRow) => row.mean_abs_final_y_m * 100,
-    note: 'The dashed line marks the 25 cm final-offset limit for an individual run. Bars show averages; the pass counts use every criterion on individual runs.',
+    note: 'The dashed line marks the 25 cm limit. The shaded area shows offsets beyond the limit.',
   },
   height: {
     label: 'Rendered visual height',
     short: 'Visual height',
     unit: 'cm',
-    scale: 45,
-    reference: 40,
     referenceLabel: '40 cm nominal height',
     value: (row: EvidenceRow) => row.mean_visual_top_height_m * 100,
-    note: 'The 40 cm line is the manufacturer’s nominal overall standing height. These bars measure the top of the rendered MuJoCo mesh, not the torso origin or physical hardware.',
+    note: 'The 40 cm line is the manufacturer’s nominal overall standing height. Each run measures the average height of the top of the rendered robot after the first 0.75 seconds.',
   },
   yaw: {
     label: 'Mean peak heading error',
     short: 'Heading error',
     unit: '°',
-    scale: 12,
-    reference: 10,
     referenceLabel: '10° run limit',
     value: (row: EvidenceRow) => row.mean_peak_yaw_deg,
-    note: 'The dashed line marks the 10° maximum yaw limit for an individual run. Low yaw means the robot is oriented forward; it does not establish low sideways drift.',
+    note: 'The dashed line marks the 10° run limit. The plot uses the largest absolute heading error measured in each run.',
   },
 } as const
 
@@ -103,10 +97,21 @@ const episodeRows = {
   development: readEpisodes(uprightEpisodeCsv),
 }
 
-function EpisodeExplorer() {
+const recordings: Record<string, { path: string }> = episodeVideos
+const featuredReplay = 'development/replays/neural_v0.45_seed7601.npz'
+
+function replayKey(studyId: StudyId, row: Record<string, string>) {
+  return studyId + '/' + row.replay
+}
+
+function EpisodeExplorer({ replay, setReplay }: { replay: string; setReplay: (key: string) => void }) {
   const [studyId, setStudyId] = useState<StudyId>('development')
   const [seed, setSeed] = useState('')
   const [outcome, setOutcome] = useState('')
+  const activeStudy: StudyId = replay.startsWith('development/') ? 'development' : 'extension_scan'
+  const active = episodeRows[activeStudy].find(row => replayKey(activeStudy, row) === replay)
+  const videoUrl = recordings[replay] && '/media/' + recordings[replay].path
+  const activeLabel = active && (active.mode === 'neural' ? 'Spiking height feedback' : modeLabel(active.mode))
   const rows = episodeRows[studyId]
   const seeds = [...new Set(rows.map(row => row.seed))]
   const visible = rows.filter(row =>
@@ -118,7 +123,7 @@ function EpisodeExplorer() {
       <div className="container">
         <p className="eyebrow section-index">05 — SIMULATION RECORDINGS</p>
         <h2 id="episodes-title">Episode explorer</h2>
-        <p>Inspect individual MuJoCo runs. Pass status uses all task criteria, including the 10° heading limit and the 25 cm final sideways limit.</p>
+        <p>Choose Watch replay beside a run to load its video player. Pass status uses all task criteria, including the 10° heading limit and the 25 cm final sideways limit.</p>
         <div className="episode-filters">
           <label>Study
             <select value={studyId} onChange={event => setStudyId(event.target.value as StudyId)}>
@@ -150,14 +155,16 @@ function EpisodeExplorer() {
                 <th scope="col">Outcome</th><th scope="col">Replay</th>
               </tr></thead>
               <tbody>{visible.map(row => {
-                const hasReplay = studyId === 'development'
-                  && row.replay === `replays/${replayProvenance.source_filename}`
+                const key = replayKey(studyId, row)
                 return (
                   <tr key={`${studyId}/${row.mode}/${row.seed}/${row.command_mps}`}>
                     <th scope="row">{modeLabel(row.mode)}</th><td>{row.seed}</td><td>{row.duration_s} s</td>
                     <td>{fmtCm(Math.abs(Number(row.sideways_m)))} cm</td><td>{fmtDeg(Number(row.max_abs_yaw_deg))}°</td>
                     <td>{row.pass_10deg === 'True' ? 'Passed' : 'Failed'}</td>
-                    <td>{hasReplay ? <a href="#episode-replay">Watch replay</a> : 'Unavailable'}</td>
+                    <td>{recordings[key] ? (
+                      <a href="#episode-replay" onClick={() => setReplay(key)}
+                        aria-label={`Watch replay for ${modeLabel(row.mode)}, seed ${row.seed}`}>Watch replay</a>
+                    ) : 'Unavailable'}</td>
                   </tr>
                 )
               })}</tbody>
@@ -165,54 +172,89 @@ function EpisodeExplorer() {
           </div>
         )}
         <a className="episode-download" href={studies[studyId].episodes} download>Download study CSV</a>
-        <div className="episode-replay" id="episode-replay">
-          <h3>Neural height feedback · seed 7601</h3>
-          <p>Eight-second replay rendered from saved simulator states. The Go2 ended 65.97 cm sideways.</p>
-          <video controls playsInline preload="none" aria-label="MuJoCo replay of the neural height-feedback controller, seed 7601">
-            <source src="/media/go2-hero.webm" type="video/webm" />
-            <source src="/media/go2-hero.mp4" type="video/mp4" />
-          </video>
-          <a href="/media/go2-hero.mp4">Open replay MP4</a>
-        </div>
+        {active && videoUrl && (
+          <div className="episode-replay" id="episode-replay">
+            <h3>{activeLabel} · seed {active.seed}</h3>
+            <p>{studies[activeStudy].title} · {active.duration_s} s · {fmtCm(Math.abs(Number(active.sideways_m)))} cm sideways · {active.pass_10deg === 'True' ? 'Passed' : 'Failed'}</p>
+            <video key={videoUrl} controls playsInline preload="metadata" src={videoUrl}
+              aria-label={`MuJoCo replay for ${activeLabel}, seed ${active.seed}`} />
+            <a href={videoUrl}>Open replay MP4</a>
+          </div>
+        )}
       </div>
     </section>
   )
 }
 
-function MetricChart({ metric, rows }: {
-  metric: (typeof metrics)[MetricId]
-  rows: readonly (EvidenceRow & { mode: string })[]
-}) {
-  const lineAt = metric.reference / metric.scale * 100
+const runPlotMetrics = {
+  height: { start: 34, end: 43, benchmark: 40, field: 'mean_visual_top_height_after_075s_m', scale: 100 },
+  yaw: { start: 0, end: 12, benchmark: 10, field: 'max_abs_yaw_deg', scale: 1 },
+  drift: { start: 0, end: 100, benchmark: 25, field: 'sideways_m', scale: 100 },
+} as const
+
+const comparisonSeeds = ['7601', '7602', '7603']
+
+function SeedSelector({ seed, onChange }: { seed: string; onChange: (seed: string) => void }) {
   return (
-    <div className="chart" role="group" aria-label={'Comparison of ' + metric.label.toLowerCase()}>
-      <ul className="chart-bars">
-        {rows.map(row => {
-          const value = metric.value(row)
-          return (
-            <li className="chart-row" key={row.mode}>
-              <span className="chart-label">{row.mode === 'neural' ? 'Height-feedback SNN' : modeLabel(row.mode)}</span>
-              <strong className="chart-value">{value.toFixed(2)}<small> {metric.unit}</small></strong>
-              <div className="chart-track" aria-hidden="true">
-                <div className={'chart-fill' + (row.mode === 'neural' ? ' neural' : '')}
-                  style={{ width: Math.min(100, value / metric.scale * 100) + '%' }} />
-                <div className="chart-target" style={{ insetInlineStart: lineAt + '%' }} />
-              </div>
-            </li>
-          )
-        })}
-      </ul>
-      <div className="chart-scale" aria-hidden="true">
-        {[0, .25, .5, .75, 1].map(tick => <span key={tick}>{metric.scale * tick}</span>)}
+    <label className="seed-selector">
+      Highlight a run
+      <select value={seed} onChange={event => onChange(event.target.value)}>
+        <option value="">All three seeds</option>
+        {comparisonSeeds.map(value => <option key={value} value={value}>Seed {value}</option>)}
+      </select>
+    </label>
+  )
+}
+
+function RunMap({ studyId, metricId, modes, seed }: {
+  studyId: StudyId
+  metricId: MetricId
+  modes: readonly string[]
+  seed: string
+}) {
+  const metric = metrics[metricId]
+  const plot = runPlotMetrics[metricId]
+  const position = (value: number) => ((value - plot.start) / (plot.end - plot.start)) * 100 + '%'
+  const valueOf = (row: Record<string, string>) => Math.abs(Number(row[plot.field])) * plot.scale
+  const display = (value: number) => value.toFixed(2) + (metric.unit === '°' ? '°' : ' ' + metric.unit)
+  return (
+    <div className="run-map" role="group" aria-label={metric.label + ' by controller and seed'}>
+      <div className="run-map-axis">
+        <span>{plot.start}{metric.unit === '°' ? '°' : ' ' + metric.unit}</span>
+        <span>{plot.end}{metric.unit === '°' ? '°' : ' ' + metric.unit}</span>
       </div>
-      <p className="chart-reference"><span className="marker-key" aria-hidden="true" />{metric.referenceLabel}</p>
-      <p className="chart-note">{metric.note}</p>
+      {modes.map(mode => {
+        const runs = episodeRows[studyId].filter(run => run.mode === mode)
+        const highlighted = runs.find(run => run.seed === seed)
+        const mean = runs.reduce((sum, run) => sum + valueOf(run), 0) / runs.length
+        return (
+          <div className="run-map-row" data-neural={mode === 'neural'} key={mode}>
+            <div className="run-map-label">
+              <strong>{mode === 'baseline' ? 'Original controller' : mode === 'neural' ? 'Height-feedback SNN' : modeLabel(mode)}</strong>
+              <span>{highlighted ? display(valueOf(highlighted)) : display(mean) + ' avg'}</span>
+            </div>
+            <div className="run-map-track" aria-hidden="true">
+              {metricId !== 'height' && <div className="run-map-over" style={{ insetInlineStart: position(plot.benchmark) }} />}
+              <div className="run-map-benchmark" style={{ insetInlineStart: position(plot.benchmark) }} />
+              {runs.map(run => (
+                <span key={run.seed} className="run-map-mark"
+                  data-muted={Boolean(seed && seed !== run.seed)} data-selected={seed === run.seed}
+                  style={{ insetInlineStart: position(valueOf(run)), top: (comparisonSeeds.indexOf(run.seed) + 1) * 25 + '%' }} />
+              ))}
+            </div>
+            <span className="sr-only">{runs.map(run => 'Seed ' + run.seed + ': ' + display(valueOf(run))).join('. ')}</span>
+          </div>
+        )
+      })}
+      <p className="run-map-key"><span aria-hidden="true" />{metric.referenceLabel}</p>
     </div>
   )
 }
 
 function App() {
   const [studyId, setStudyId] = useState<StudyId>('extension_scan')
+  const [replay, setReplay] = useState(featuredReplay)
+  const [highlightedSeed, setHighlightedSeed] = useState('')
   const [metricId, setMetricId] = useState<MetricId>('drift')
   const study = studies[studyId]
   const metric = metrics[metricId]
@@ -302,7 +344,7 @@ function App() {
               <h3>Try neural height feedback</h3>
               <p>A separate spiking network adjusted knee extension from body-height error and vertical speed. Mean height rose from {fmtCm(original.mean_visual_top_height_m)} cm and peak heading error fell on average. Mean final sideways drift reached {fmtCm(neural.mean_abs_final_y_m)} cm, and every run exceeded the 25 cm limit.</p>
               <span className="card-outcome negative">0 of 3 passed all criteria</span>
-              <a className="story-link" href="#episode-replay">See the seed 7601 replay <span aria-hidden="true">↘</span></a>
+              <a className="story-link" href="#episode-replay" onClick={() => setReplay(featuredReplay)}>See the seed 7601 replay <span aria-hidden="true">↘</span></a>
             </article>
           </div>
           <div className="insight-line"><span aria-hidden="true">↳</span><p><strong>Next experiment.</strong> Adapt the gait controller to the taller stance, then test on fresh seeds to see whether the Go2 can maintain its height and stay within the heading and sideways-drift limits.</p></div>
@@ -355,7 +397,14 @@ function App() {
                 </div>
               </div>
 
-              <MetricChart metric={metric} rows={study.data} />
+              <div className="study-plot">
+                <RunMap studyId={studyId} metricId={metricId} modes={study.data.map(row => row.mode)} seed={highlightedSeed} />
+                <div className="study-plot-notes">
+                  <SeedSelector seed={highlightedSeed} onChange={setHighlightedSeed} />
+                  <p>{metric.note}</p>
+                  <p>Each mark is one run. Pick a seed to show its exact value for every controller here and in the SNN comparison.</p>
+                </div>
+              </div>
 
               <div className="data-bottom">
                 <div className="data-qualifier"><strong>Full-task pass:</strong> one episode must meet the duration, forward-distance, lateral-position, minimum-root-height and peak-yaw limits together.</div>
@@ -428,12 +477,13 @@ function App() {
             </figure>
           </div>
           <h4 className="trace-heading">Across all three seeds</h4>
-          <p>Each marker represents one completed run. Lines help you follow the same controller across matched seeds. The figures above show how the measurements changed within one run.</p>
+          <p>Follow one seed across all three metrics, or show all runs with the controller averages. Each row shows where the runs landed relative to the benchmark.</p>
+          <SeedSelector seed={highlightedSeed} onChange={setHighlightedSeed} />
           <div className="snn-charts">
             {([
-              ['height', 'Each point is the mean height of the top of the rendered robot after 0.75 s. The dotted line shows the 40 cm nominal standing height. The SNN was taller on all three seeds.'],
-              ['yaw', 'Each point is the largest absolute heading error in an eight-second run. Both controllers stayed below the dotted 10° limit, and the SNN had less heading error on every seed.'],
-              ['drift', 'Each point is the absolute distance sideways when the run ended. Every SNN run exceeded the dotted 25 cm limit, while every original-controller run stayed below it.'],
+              ['height', 'Each run contributes its mean height of the top of the rendered robot after 0.75 s. The dotted line shows the 40 cm nominal standing height. The SNN was taller on all three seeds.'],
+              ['yaw', 'Each run contributes its largest absolute heading error in an eight-second run. Both controllers stayed below the dashed 10° limit, and the SNN had less heading error on every seed.'],
+              ['drift', 'Each run contributes its absolute distance sideways when the run ended. Every SNN run exceeded the dashed 25 cm limit, while every original-controller run stayed below it.'],
             ] as const).map(([id, explanation]) => {
               const metric = metrics[id]
               const baselineMean = metric.value(original).toFixed(2)
@@ -441,8 +491,7 @@ function App() {
               return (
                 <figure className="snn-chart" key={id}>
                   <h5>{metric.label}</h5>
-                  <img src={`/media/go2-seed-comparison-${id}.png`} width="720" height="528" loading="lazy"
-                    alt={`${metric.label} for the original controller and the height-feedback SNN on seeds 7601, 7602, and 7603.`} />
+                  <RunMap studyId="development" metricId={id} modes={['baseline', 'neural']} seed={highlightedSeed} />
                   <figcaption>
                     <p className="snn-means">Three-run averages · {baselineMean} {metric.unit} original · {neuralMean} {metric.unit} SNN</p>
                     <p>{explanation}</p>
@@ -477,7 +526,7 @@ function App() {
           </div>
         </section>
 
-        <EpisodeExplorer />
+        <EpisodeExplorer replay={replay} setReplay={setReplay} />
       </main>
 
       <footer className="site-footer">

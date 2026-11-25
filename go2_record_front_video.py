@@ -21,7 +21,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--replay", required=True)
     parser.add_argument("--out", required=True)
-    parser.add_argument("--view", choices=["front", "wide", "top"],
+    parser.add_argument("--view", choices=["front", "follow", "wide", "top"],
                         default="front")
     parser.add_argument("--fps", type=int, default=30)
     parser.add_argument("--width", type=int, default=1280)
@@ -103,13 +103,14 @@ def main():
             codec="libx264",
             pixelformat="yuv420p",
             quality=8,
+            macro_block_size=2,
         ) as writer:
             for idx in frame_ids:
                 data.qpos[:] = qpos[idx]
                 data.qvel[:] = qvel[idx]
                 mujoco.mj_forward(model, data)
 
-                if args.view == "front":
+                if args.view in ("front", "follow"):
                     base_xyz = np.array(
                         data.qpos[:3], dtype=float
                     )
@@ -121,8 +122,12 @@ def main():
                         base_xyz[2] + 0.10,
                     ]
                     cam.distance = args.distance
-                    cam.elevation = -8
-                    cam.azimuth = math.degrees(yaw) + 180
+                    if args.view == "follow":
+                        cam.elevation = -24
+                        cam.azimuth = math.degrees(start_yaw) + 135
+                    else:
+                        cam.elevation = -8
+                        cam.azimuth = math.degrees(yaw) + 180
 
                 renderer.update_scene(data, camera=cam)
                 frame = renderer.render()

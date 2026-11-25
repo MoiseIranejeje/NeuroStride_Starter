@@ -1,0 +1,266 @@
+{
+  "extension_scan/replays/baseline_v0.45_seed7601.npz": {
+    "path": "episodes/extension_scan/baseline_v0.45_seed7601.mp4",
+    "source_sha256": "351d5660dc22214ebb55d2acb488469024cb2f71ed6003b5dfb0ae41ceecaaa6",
+    "sha256": "e29fcebd3e74dbc7c57486cf3dca79f1801bc1033a8f44eaa42c08417ece938d",
+    "seconds": 8.0,
+    "dimensions_px": [
+      960,
+      540
+    ],
+    "camera": "three-quarter tracking"
+  },
+  "extension_scan/replays/fixed04_v0.45_seed7601.npz": {
+    "path": "episodes/extension_scan/fixed04_v0.45_seed7601.mp4",
+    "source_sha256": "92bf69cdd880f662b7b27524a0bc406a7b43cb10bb60c1ddb69725f0a6f4a615",
+    "sha256": "9495c5828e537bdf8b2d14685fc91ab170cc3456283e7f26ff3789b523c65b28",
+    "seconds": 8.0,
+    "dimensions_px": [
+      960,
+      540
+    ],
+    "camera": "three-quarter tracking"
+  },
+  "extension_scan/replays/fixed08_v0.45_seed7601.npz": {
+    "path": "episodes/extension_scan/fixed08_v0.45_seed7601.mp4",
+    "source_sha256": "90b53727d24aff556f838d1b47207cdc8ed49df4cf82246d75056a3bc2b28115",
+    "sha256": "5e47042ae6553e2eaf7f0a021902deb1a963d84cb1245d539418904cdd71ad17",
+    "seconds": 8.0,
+    "dimensions_px": [
+      960,
+      540
+    ],
+    "camera": "three-quarter tracking"
+  },
+  "extension_scan/replays/fixed12_v0.45_seed7601.npz": {
+    "path": "episodes/extension_scan/fixed12_v0.45_seed7601.mp4",
+    "source_sha256": "d3b993603dd3ca660f793812ef66ed9073116b0ecc81cfb44d17bcc91d75a5be",
+    "sha256": "8d4065a5886431074b144e83412556c3fc6c849d24d3e4c8cdf4224858a0c292",
+    "seconds": 8.0,
+    "dimensions_px": [
+      960,
+      540
+    ],
+    "camera": "three-quarter tracking"
+  },
+  "extension_scan/replays/baseline_v0.45_seed7602.npz": {
+    "path": "episodes/extension_scan/baseline_v0.45_seed7602.mp4",
+    "source_sha256": "139fb808c208d70e8d6025b15f441f8f0c4785f3275798b9969a0c81039f042e",
+    "sha256": "d27cde5d80ffc4eb40af499a2044c0a519d5042bde1c661f1b1570bce26fe091",
+    "seconds": 8.0,
+    "dimensions_px": [
+      960,
+      540
+    ],
+    "camera": "three-quarter tracking"
+  },
+  "extension_scan/replays/fixed04_v0.45_seed7602.npz": {
+    "path": "episodes/extension_scan/fixed04_v0.45_seed7602.mp4",
+    "source_sha256": "5903dc5e08e9352f84a902ae452fe5493594c715b7d8eecb95e4f4880c3b6928",
+    "sha256": "c56f44f4f8da329118da5304be21713948c95d6f52b20aa2442357f58f9b80f7",
+    "seconds": 8.0,
+    "dimensions_px": [
+      960,
+      540
+    ],
+    "camera": "three-quarter tracking"
+  },
+  "extension_scan/replays/fixed08_v0.45_seed7602.npz": {
+    "path": "episodes/extension_scan/fixed08_v0.45_seed7602.mp4",
+    "source_sha256": "06c6151137d3ec9d5055f83e424c190c76d12773927dda700025d4578e2815f1",
+    "sha256": "ce4fbc69ca3a9c2e0adac479b4d4e54ca29f7752ada36767502656aea6f28316",
+    "seconds": 8.0,
+    "dimensions_px": [
+      960,
+      540
+    ],
+    "camera": "three-quarter tracking"
+  },
+  "extension_scan/replays/fixed12_v0.45_seed7602.npz": {
+    "path": "episodes/extension_scan/fixed12_v0.45_seed7602.mp4",
+    "source_sha256": "b91982b209d2b8e15702e1f2f8e7ccddff019e42a7fb6a5e1eef9a2c2bf18454",
+    "sha256": "761365167088b802d0f68242b69b92d500ccd1ad9aee114bcf9f67f9c85d7a2b",
+    "seconds": 8.0,
+    "dimensions_px": [
+      960,
+      540
+    ],
+    "camera": "three-quarter tracking"
+  },
+  "extension_scan/replays/baseline_v0.45_seed7603.npz": {
+    "path": "episodes/extension_scan/baseline_v0.45_seed7603.mp4",
+    "source_sha256": "091b6681e9dfccb52fd92136ec9228d17f9bcd4b1031c8ffbfc9de7ba7b6d8e3",
+    "sha256": "0c5189e45d4915e35e693fb9ff4819c9c1f5bfde2fa10660dc1f759c9d147d52",
+    "seconds": 8.0,
+    "dimensions_px": [
+      960,
+      540
+    ],
+    "camera": "three-quarter tracking"
+  },
+  "extension_scan/replays/fixed04_v0.45_seed7603.npz": {
+    "path": "episodes/extension_scan/fixed04_v0.45_seed7603.mp4",
+    "source_sha256": "0ac41c19de80317dfef79d50dbf4c412843782e6127e70006c6f2dd546c34e5d",
+    "sha256": "6e6260dce1e0f53c397f2b4032164821cf934189d994f2db85c861f68db8fed4",
+    "seconds": 8.0,
+    "dimensions_px": [
+      960,
+      540
+    ],
+    "camera": "three-quarter tracking"
+  },
+  "extension_scan/replays/fixed08_v0.45_seed7603.npz": {
+    "path": "episodes/extension_scan/fixed08_v0.45_seed7603.mp4",
+    "source_sha256": "17ad7188436ea5f5353206bf8bfe9ff35b7df9b5e1a5f33c6643d0944436c0fd",
+    "sha256": "2861bfce0c3a7dead8f31f8d212adcfee2ce596f829d4b9b6c6ab76900b0d674",
+    "seconds": 8.0,
+    "dimensions_px": [
+      960,
+      540
+    ],
+    "camera": "three-quarter tracking"
+  },
+  "extension_scan/replays/fixed12_v0.45_seed7603.npz": {
+    "path": "episodes/extension_scan/fixed12_v0.45_seed7603.mp4",
+    "source_sha256": "620b42c85ce4e75c13918ddfcf1f5271901b68c70fce72b3b434e41f6fcd8cd1",
+    "sha256": "c1ccc82cb819d97b4833adb2f2dc598a4cdbd7802339e431052b29992f92c0f0",
+    "seconds": 8.0,
+    "dimensions_px": [
+      960,
+      540
+    ],
+    "camera": "three-quarter tracking"
+  },
+  "development/replays/baseline_v0.45_seed7601.npz": {
+    "path": "episodes/development/baseline_v0.45_seed7601.mp4",
+    "source_sha256": "1f36932adf7b864d1cc7b63cfc8d1b5a4c950a10de4feb1e0f6170180e4957e8",
+    "sha256": "e29fcebd3e74dbc7c57486cf3dca79f1801bc1033a8f44eaa42c08417ece938d",
+    "seconds": 8.0,
+    "dimensions_px": [
+      960,
+      540
+    ],
+    "camera": "three-quarter tracking"
+  },
+  "development/replays/fixed16_v0.45_seed7601.npz": {
+    "path": "episodes/development/fixed16_v0.45_seed7601.mp4",
+    "source_sha256": "31823b2d33d2ea2520d57f07dbf762c52a96617d30e3eae08bc1a6b417f4f037",
+    "sha256": "4beb8e428cb119c687235d776ca475b77384c01e5c29b9746ba95504119a2934",
+    "seconds": 8.0,
+    "dimensions_px": [
+      960,
+      540
+    ],
+    "camera": "three-quarter tracking"
+  },
+  "development/replays/fixed24_v0.45_seed7601.npz": {
+    "path": "episodes/development/fixed24_v0.45_seed7601.mp4",
+    "source_sha256": "531d725e26f4b3a979b20a163575e918b8c0d09139a0571c7c0e39d5673fdcb0",
+    "sha256": "9f4c43052710ca756ea7f3ec8cce0982592513730027cd742697eab5189fa4b0",
+    "seconds": 8.0,
+    "dimensions_px": [
+      960,
+      540
+    ],
+    "camera": "three-quarter tracking"
+  },
+  "development/replays/neural_v0.45_seed7601.npz": {
+    "path": "episodes/development/neural_v0.45_seed7601.mp4",
+    "source_sha256": "6cdf15a6115286c376b42a36ad4d4ce4b2e275f0bfda7d092476e51c486ac4ed",
+    "sha256": "b329243473ea6c3f42c0edaeacdf5fb3fbc39754a453dcfbcf8d16d95059b505",
+    "seconds": 8.0,
+    "dimensions_px": [
+      960,
+      540
+    ],
+    "camera": "three-quarter tracking"
+  },
+  "development/replays/baseline_v0.45_seed7602.npz": {
+    "path": "episodes/development/baseline_v0.45_seed7602.mp4",
+    "source_sha256": "fe9c3af4476b9ee8ee1b8744f02252af8f5c0e3931522b22b64c736a385fb2a7",
+    "sha256": "d27cde5d80ffc4eb40af499a2044c0a519d5042bde1c661f1b1570bce26fe091",
+    "seconds": 8.0,
+    "dimensions_px": [
+      960,
+      540
+    ],
+    "camera": "three-quarter tracking"
+  },
+  "development/replays/fixed16_v0.45_seed7602.npz": {
+    "path": "episodes/development/fixed16_v0.45_seed7602.mp4",
+    "source_sha256": "4696e5a783c164595c8913b38b68bd987146f1579226855a691677ddd9bebd9d",
+    "sha256": "8b45c5bd7cba8ba915300cd67896308999e49e20acc0d9ef906e196dc170849b",
+    "seconds": 8.0,
+    "dimensions_px": [
+      960,
+      540
+    ],
+    "camera": "three-quarter tracking"
+  },
+  "development/replays/fixed24_v0.45_seed7602.npz": {
+    "path": "episodes/development/fixed24_v0.45_seed7602.mp4",
+    "source_sha256": "6967c22c1a4a09aaa2f79e9bade74712905dc762d7296924b9c43a604552597a",
+    "sha256": "11413ef3edc5f1a8e9872b8e34b04f8cad7899db4566d47303d06676cdf78a98",
+    "seconds": 8.0,
+    "dimensions_px": [
+      960,
+      540
+    ],
+    "camera": "three-quarter tracking"
+  },
+  "development/replays/neural_v0.45_seed7602.npz": {
+    "path": "episodes/development/neural_v0.45_seed7602.mp4",
+    "source_sha256": "eb2012266fc731bce73bc973f1ff8031f02edc2f1ece54f2301c768de6e5b2e9",
+    "sha256": "194447d14f9250b1da63b7c332b28f68b03398cbedf2793ace98e88f0f4a6bb8",
+    "seconds": 8.0,
+    "dimensions_px": [
+      960,
+      540
+    ],
+    "camera": "three-quarter tracking"
+  },
+  "development/replays/baseline_v0.45_seed7603.npz": {
+    "path": "episodes/development/baseline_v0.45_seed7603.mp4",
+    "source_sha256": "ff82c4767b65d7a7e45836b49744877975cfdb70261a3487b9297aa582ffa7c1",
+    "sha256": "0c5189e45d4915e35e693fb9ff4819c9c1f5bfde2fa10660dc1f759c9d147d52",
+    "seconds": 8.0,
+    "dimensions_px": [
+      960,
+      540
+    ],
+    "camera": "three-quarter tracking"
+  },
+  "development/replays/fixed16_v0.45_seed7603.npz": {
+    "path": "episodes/development/fixed16_v0.45_seed7603.mp4",
+    "source_sha256": "77cf878268109e0a9a10cf33b463eba2d573a6051c5a7253e015fee5b9c5713e",
+    "sha256": "af08115aad4aa33c6c4b21b91d52063cd67cc1507d3ce1b4d3d1a372cdacba4e",
+    "seconds": 8.0,
+    "dimensions_px": [
+      960,
+      540
+    ],
+    "camera": "three-quarter tracking"
+  },
+  "development/replays/fixed24_v0.45_seed7603.npz": {
+    "path": "episodes/development/fixed24_v0.45_seed7603.mp4",
+    "source_sha256": "103d6eb3ab5dd430f1d2366277a7115a3cf3f0881cd50038c22c271e65d4732d",
+    "sha256": "21b1da41593bf1a586af215ff4d255fdb19875ca1eba035108271bd438caa46f",
+    "seconds": 8.0,
+    "dimensions_px": [
+      960,
+      540
+    ],
+    "camera": "three-quarter tracking"
+  },
+  "development/replays/neural_v0.45_seed7603.npz": {
+    "path": "episodes/development/neural_v0.45_seed7603.mp4",
+    "source_sha256": "b499b77c147aad413338b6d17bd7149e000ec8994c24d55d8aeb459a555dcc3c",
+    "sha256": "dda09ef1f6a0779a403f1092963bc9bc8716dc96b8cca549026eddabdc79ad55",
+    "seconds": 8.0,
+    "dimensions_px": [
+      960,
+      540
+    ],
+    "camera": "three-quarter tracking"
+  }
+}

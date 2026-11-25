@@ -25,9 +25,11 @@ Use `(study_id, mode, seed, command_mps)` as the episode key. The study ID comes
 
 The full-task criteria also cover run duration, forward distance, final sideways displacement and minimum root height. The evaluation scripts define the thresholds. Additional CSV diagnostics include torso pitch and roll, knee extension and torque clipping.
 
-## Published recording
+## Published recordings
 
 The [WebM](public/media/go2-hero.webm) and [MP4](public/media/go2-hero.mp4) are two encodings of the same 8-second replay. They map to `(development, neural, 7601, 0.45)`. The episode completed 8 seconds and ended 0.65973 m sideways, exceeding the 0.25 m limit. The [provenance record](public/media/go2-hero-provenance.json) lists the source filename and checksums for both encodings.
+
+The episode explorer also includes a 960 × 540 MP4 for every exported row in both studies. A three-quarter tracking camera keeps the robot in view while the saved simulator states determine its motion. The [episode replay manifest](src/evidence/episode-videos.json) maps study-relative replay paths to the corresponding MP4 and records the source and video checksums. The publisher verifies the saved replay metadata against the CSV and decodes each MP4 before listing it. Regenerate the clips with `python go2_publish_episode_videos.py <original-results-directory>` from the repository root.
 
 ## Seed 7601 trace plots
 
@@ -36,5 +38,4 @@ The trajectory, pitch, roll and heading plots use saved frames from the baseline
 ## Evidence still to collect
 
 - Raw simulation replays referenced by the exports are outside this checkout. The neural seed 7601 source replay was verified in the local simulator checkout.
-- The other episodes have no published recording mapped in this inventory.
 - Research references and any evidence outside these two studies still need to be inventoried.

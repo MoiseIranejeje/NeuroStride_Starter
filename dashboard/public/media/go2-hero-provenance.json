@@ -29,25 +29,26 @@
     "stop": "completed"
   },
   "note": "Rendered from saved simulator states. Not a new model evaluation.",
-  "created_utc": "2026-11-25T12:36:00.174140+00:00",
+  "created_utc": "2026-11-25T14:27:07.744303+00:00",
   "display": "muted looping hero background, decorative playback",
   "frame_rate_fps": 20,
   "dimensions_px": [
-    896,
-    504
+    960,
+    540
   ],
   "clip_max_duration_seconds": 8.0,
   "webm_available": true,
   "files": [
     {
       "name": "go2-hero.webm",
-      "bytes": 171699,
-      "sha256": "71301ce40b7a20bc07c8e8dbe92c527e3450054fa4f6d2d18f5116edeb4455b0"
+      "bytes": 1189630,
+      "sha256": "2c5dbe2ba4fdf44ca3f3a4f92c96253559e5aa94519c61543b608fdb4a202f23"
     },
     {
       "name": "go2-hero.mp4",
-      "bytes": 97712,
-      "sha256": "7a3a1a681b4ebfa763701d17098d25fcbb2d7f3c68d5b4801a936dbdfa68c85e"
+      "bytes": 975359,
+      "sha256": "be48126a031287d7d49b17c3506087553215f0d0bb497cb62119e9aff98dfcaf"
     }
-  ]
+  ],
+  "camera": "three-quarter tracking"
 }

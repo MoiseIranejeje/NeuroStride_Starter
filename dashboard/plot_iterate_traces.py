@@ -1,4 +1,4 @@
-"""Plot the matched baseline and height-feedback replays for Iterate seed 7601."""
+"""Plot Iterate episode comparisons and matched replays."""
 import argparse
 import csv
 import hashlib
@@ -21,31 +21,42 @@ def read_trace(path):
         return time, position, replay["pitch_deg"], replay["roll_deg"], np.degrees(yaw - yaw[0])
 
 
-def plot_seed_comparisons(dashboard, media):
-    with (dashboard / "src/evidence/development-episodes.csv").open(newline="") as source:
+def plot_seed_comparisons(dashboard, media, study_id, series, output_prefix):
+    with (dashboard / "src/evidence" / f"{study_id}-episodes.csv").open(newline="") as source:
         rows = list(csv.DictReader(source))
     seeds = [7601, 7602, 7603]
     plots = [
-        ("height", "mean_visual_top_height_after_075s_m", "Top-of-robot height (cm)", 100, 40),
-        ("yaw", "max_abs_yaw_deg", "Peak heading error (°)", 1, 10),
-        ("drift", "sideways_m", "Final sideways offset (cm)", 100, 25),
+        ("height", "mean_visual_top_height_after_075s_m", "Top-of-robot height (cm)", 100, 40, (34, 43)),
+        ("yaw", "max_abs_yaw_deg", "Peak heading error (°)", 1, 10, (0, 12)),
+        ("drift", "sideways_m", "Final sideways offset (cm)", 100, 25, (0, 110)),
     ]
-    for name, field, label, scale, reference in plots:
+    for name, field, label, scale, reference, bounds in plots:
         fig, ax = plt.subplots(figsize=(4.5, 3.3), layout="constrained")
-        for mode, title, color, style, marker in (
-            ("baseline", "Original controller", "#175b87", "--", "o"),
-            ("neural", "Height-feedback SNN", "#287a50", "-", "s"),
-        ):
+        ax.set_facecolor("#f4f8f6")
+        for index, (mode, title, color) in enumerate(series):
             values = {int(row["seed"]): abs(float(row[field])) * scale
                       for row in rows if row["mode"] == mode}
-            ax.plot(seeds, [values[seed] for seed in seeds], color=color,
-                    linestyle=style, marker=marker, linewidth=1.7, label=title)
-        ax.axhline(reference, color="#99511b", linestyle=":", linewidth=1.2)
-        ax.set(xlabel="Development seed", ylabel=label, xticks=seeds)
-        ax.grid(color="#dfe5e2", alpha=.85)
+            if set(values) != set(seeds):
+                raise ValueError(f"Unexpected seeds for {study_id}/{mode}: {values.keys()}")
+            low, high = min(values.values()), max(values.values())
+            average = np.mean(list(values.values()))
+            if not bounds[0] <= low <= high <= bounds[1]:
+                raise ValueError(f"Plot bounds exclude values for {study_id}/{mode}/{name}")
+            ax.hlines(index, low, high, color=color, linewidth=3)
+            ax.vlines([low, high], index - .08, index + .08, color=color, linewidth=1.5)
+            ax.scatter(average, index, color=color, edgecolor="white", marker="D",
+                       s=50, linewidth=.8, zorder=3)
+            ax.annotate(f"{average:.2f}", (average, index), xytext=(0, 9),
+                        textcoords="offset points", ha="center", fontsize=9,
+                        fontweight="bold", color="#142825")
+        ax.axvline(reference, color="#99511b", linestyle=":", linewidth=1.6)
+        ax.set(xlabel=label, xlim=bounds, ylim=(len(series) - .55, -.65),
+               yticks=range(len(series)), yticklabels=[title for _, title, _ in series])
+        ax.tick_params(axis="y", length=0, labelsize=9)
+        ax.grid(axis="x", color="#d6e2de")
         ax.set_axisbelow(True)
-        ax.legend(loc="lower center", bbox_to_anchor=(.5, 1), fontsize=8, ncol=2)
-        fig.savefig(media / f"go2-seed-comparison-{name}.png", dpi=160)
+        ax.spines[["top", "right", "left"]].set_visible(False)
+        fig.savefig(media / f"{output_prefix}-{name}.png", dpi=160)
         plt.close(fig)
 
 
@@ -90,7 +101,24 @@ def main():
         fig.savefig(media / f"go2-seed7601-{name}.png", dpi=160)
         plt.close(fig)
 
-    plot_seed_comparisons(dashboard, media)
+    original = ("baseline", "Original\ncontroller", "#175b87")
+    neural_series = ("neural", "Height-feedback\nSNN", "#287a50")
+    plot_seed_comparisons(dashboard, media, "development", (original, neural_series),
+                          "go2-seed-comparison")
+    for study_id, modes in (
+        ("extension_scan", (
+            ("fixed04", "+0.04 rad", "#99511b"),
+            ("fixed08", "+0.08 rad", "#6750a4"),
+            ("fixed12", "+0.12 rad", "#287a50"),
+        )),
+        ("development", (
+            ("fixed16", "+0.16 rad", "#99511b"),
+            ("fixed24", "+0.24 rad", "#6750a4"),
+            neural_series,
+        )),
+    ):
+        plot_seed_comparisons(dashboard, media, study_id, (original, *modes),
+                              f"go2-study-{study_id}")
 
     print("Final XY (m):", baseline[1][-1], neural[1][-1])
     print("Saved-frame peak heading error (degrees):", *(np.abs(t[4]).max() for t in (baseline, neural)))
