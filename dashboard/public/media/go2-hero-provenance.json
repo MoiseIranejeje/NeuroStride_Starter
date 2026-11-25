@@ -1,0 +1,53 @@
+{
+  "source_type": "MuJoCo qpos/qvel state replay",
+  "source_filename": "neural_v0.45_seed7601.npz",
+  "source_sha256": "6cdf15a6115286c376b42a36ad4d4ce4b2e275f0bfda7d092476e51c486ac4ed",
+  "seed_from_filename": 7601,
+  "simulation_seconds": 8.0,
+  "episode_summary": {
+    "mode": "neural",
+    "seed": 7601,
+    "command_mps": 0.45,
+    "duration_s": 8.0,
+    "forward_m": 3.46937,
+    "sideways_m": 0.65973,
+    "peak_cross_track_m": 0.65973,
+    "max_abs_yaw_deg": 2.7298,
+    "pitch_rms_deg": 6.8341,
+    "roll_rms_deg": 1.9802,
+    "minimum_root_height_m": 0.2682,
+    "mean_root_height_after_075s_m": 0.31518,
+    "mean_visual_top_height_after_075s_m": 0.3948,
+    "visual_top_height_std_m": 0.00412,
+    "mean_abs_top_height_error_from_40cm_m": 0.00526,
+    "mean_extension_after_075s_rad": 0.2007,
+    "height_neural_spike_rate_last": 0.44336,
+    "torque_clip_fraction": 0.0,
+    "pass_15deg": false,
+    "pass_10deg": false,
+    "pass_5deg": false,
+    "stop": "completed"
+  },
+  "note": "Rendered from saved simulator states. Not a new model evaluation.",
+  "created_utc": "2026-11-25T12:36:00.174140+00:00",
+  "display": "muted looping hero background, decorative playback",
+  "frame_rate_fps": 20,
+  "dimensions_px": [
+    896,
+    504
+  ],
+  "clip_max_duration_seconds": 8.0,
+  "webm_available": true,
+  "files": [
+    {
+      "name": "go2-hero.webm",
+      "bytes": 171699,
+      "sha256": "71301ce40b7a20bc07c8e8dbe92c527e3450054fa4f6d2d18f5116edeb4455b0"
+    },
+    {
+      "name": "go2-hero.mp4",
+      "bytes": 97712,
+      "sha256": "7a3a1a681b4ebfa763701d17098d25fcbb2d7f3c68d5b4801a936dbdfa68c85e"
+    }
+  ]
+}
