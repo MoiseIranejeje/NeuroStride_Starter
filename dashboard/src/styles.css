@@ -239,10 +239,12 @@ tbody tr:hover { background:#edf4eb; }
 .snn-section h3 { font-size:1.65rem; margin-bottom:.65rem; }
 .snn-section p { color:var(--muted); }
 .snn-charts { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,310px),1fr)); gap:1rem; margin-top:1.5rem; }
-.snn-chart { background:var(--white); border:1px solid var(--hairline); padding:clamp(1rem,3vw,2rem); }
-.snn-chart h4 { font-size:1.1rem; font-weight:700; margin-bottom:.35rem; }
-.snn-chart .snn-change { color:#205d4c; font-size:.82rem; font-weight:700; margin-bottom:.85rem; }
-.snn-chart .snn-change[data-metric="drift"] { color:#983b29; }
+.snn-chart { margin:0; min-width:0; background:#fff; border:1px solid var(--hairline); }
+.snn-chart h5 { margin:1rem 1rem .35rem; font-size:1.1rem; font-weight:700; }
+.snn-chart img { display:block; width:100%; height:auto; }
+.snn-chart figcaption { padding:0 1rem 1rem; font-size:.9rem; }
+.snn-chart figcaption p { margin:0; }
+.snn-chart figcaption .snn-means { margin-bottom:.5rem; color:#205d4c; font-weight:700; }
 
 .trace-heading { margin:2rem 0 .65rem; font-size:1.2rem; font-weight:750; }
 .trace-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,470px),1fr)); gap:1rem; }

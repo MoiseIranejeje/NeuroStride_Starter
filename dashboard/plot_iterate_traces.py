@@ -1,5 +1,6 @@
 """Plot the matched baseline and height-feedback replays for Iterate seed 7601."""
 import argparse
+import csv
 import hashlib
 import json
 from pathlib import Path
@@ -18,6 +19,34 @@ def read_trace(path):
         w, x, y, z = pose[:, 3:7].T
         yaw = np.unwrap(np.arctan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z)))
         return time, position, replay["pitch_deg"], replay["roll_deg"], np.degrees(yaw - yaw[0])
+
+
+def plot_seed_comparisons(dashboard, media):
+    with (dashboard / "src/evidence/development-episodes.csv").open(newline="") as source:
+        rows = list(csv.DictReader(source))
+    seeds = [7601, 7602, 7603]
+    plots = [
+        ("height", "mean_visual_top_height_after_075s_m", "Top-of-robot height (cm)", 100, 40),
+        ("yaw", "max_abs_yaw_deg", "Peak heading error (°)", 1, 10),
+        ("drift", "sideways_m", "Final sideways offset (cm)", 100, 25),
+    ]
+    for name, field, label, scale, reference in plots:
+        fig, ax = plt.subplots(figsize=(4.5, 3.3), layout="constrained")
+        for mode, title, color, style, marker in (
+            ("baseline", "Original controller", "#175b87", "--", "o"),
+            ("neural", "Height-feedback SNN", "#287a50", "-", "s"),
+        ):
+            values = {int(row["seed"]): abs(float(row[field])) * scale
+                      for row in rows if row["mode"] == mode}
+            ax.plot(seeds, [values[seed] for seed in seeds], color=color,
+                    linestyle=style, marker=marker, linewidth=1.7, label=title)
+        ax.axhline(reference, color="#99511b", linestyle=":", linewidth=1.2)
+        ax.set(xlabel="Development seed", ylabel=label, xticks=seeds)
+        ax.grid(color="#dfe5e2", alpha=.85)
+        ax.set_axisbelow(True)
+        ax.legend(loc="lower center", bbox_to_anchor=(.5, 1), fontsize=8, ncol=2)
+        fig.savefig(media / f"go2-seed-comparison-{name}.png", dpi=160)
+        plt.close(fig)
 
 
 def main():
@@ -60,6 +89,8 @@ def main():
         ax.legend(loc="best", fontsize=9)
         fig.savefig(media / f"go2-seed7601-{name}.png", dpi=160)
         plt.close(fig)
+
+    plot_seed_comparisons(dashboard, media)
 
     print("Final XY (m):", baseline[1][-1], neural[1][-1])
     print("Saved-frame peak heading error (degrees):", *(np.abs(t[4]).max() for t in (baseline, neural)))

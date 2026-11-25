@@ -428,18 +428,26 @@ function App() {
             </figure>
           </div>
           <h4 className="trace-heading">Across all three seeds</h4>
+          <p>Each marker represents one completed run. Lines help you follow the same controller across matched seeds. The figures above show how the measurements changed within one run.</p>
           <div className="snn-charts">
-            {(['height', 'yaw', 'drift'] as const).map(id => {
+            {([
+              ['height', 'Each point is the mean height of the top of the rendered robot after 0.75 s. The dotted line shows the 40 cm nominal standing height. The SNN was taller on all three seeds.'],
+              ['yaw', 'Each point is the largest absolute heading error in an eight-second run. Both controllers stayed below the dotted 10° limit, and the SNN had less heading error on every seed.'],
+              ['drift', 'Each point is the absolute distance sideways when the run ended. Every SNN run exceeded the dotted 25 cm limit, while every original-controller run stayed below it.'],
+            ] as const).map(([id, explanation]) => {
               const metric = metrics[id]
-              const change = metric.value(neural) - metric.value(original)
+              const baselineMean = metric.value(original).toFixed(2)
+              const neuralMean = metric.value(neural).toFixed(2)
               return (
-                <div className="snn-chart" key={id}>
-                  <h4>{metric.label}</h4>
-                  <p className="snn-change" data-metric={id}>
-                    {Math.abs(change).toFixed(2)}{metric.unit === '°' ? '°' : ' ' + metric.unit} {change > 0 ? 'higher' : 'lower'} with SNN
-                  </p>
-                  <MetricChart metric={metric} rows={[original, neural]} />
-                </div>
+                <figure className="snn-chart" key={id}>
+                  <h5>{metric.label}</h5>
+                  <img src={`/media/go2-seed-comparison-${id}.png`} width="720" height="528" loading="lazy"
+                    alt={`${metric.label} for the original controller and the height-feedback SNN on seeds 7601, 7602, and 7603.`} />
+                  <figcaption>
+                    <p className="snn-means">Three-run averages · {baselineMean} {metric.unit} original · {neuralMean} {metric.unit} SNN</p>
+                    <p>{explanation}</p>
+                  </figcaption>
+                </figure>
               )
             })}
           </div>
