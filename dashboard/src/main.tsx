@@ -109,7 +109,6 @@ function App() {
 
       <main id="top">
         <section className="hero" aria-labelledby="hero-heading">
-          <HeroVideo />
           <div className="container hero-inner">
             <div className="hero-copy">
               <p className="eyebrow hero-eyebrow"><span className="signal-dot" /> NEUROSTRIDE / MUJOCO GO2 / SNN CONTROL</p>
@@ -120,24 +119,27 @@ function App() {
                 <span className="hero-meta">Flat ground · 0.45 m/s command · 8 s · 3 seeds per mode</span>
               </div>
             </div>
-            <aside className="hero-evidence" aria-label="Neural upright walking outcomes">
-              <div className="hero-evidence-top"><span>HEIGHT-FEEDBACK SNN RESULTS</span><span>SEEDS 7601–7603</span></div>
-              <div className="hero-metric">
-                <span className="hero-metric-index">VISUAL HEIGHT</span>
-                <strong>{fmtCm(neural.mean_visual_top_height_m)}<small>cm</small></strong>
-                <span>Mean rendered-mesh top height after 0.75 s</span>
-              </div>
-              <div className="hero-metric">
-                <span className="hero-metric-index">HEADING ERROR</span>
-                <strong>{fmtDeg(neural.mean_peak_yaw_deg)}<small>°</small></strong>
-                <span>Mean per-episode peak yaw</span>
-              </div>
-              <div className="hero-metric hero-metric-warning">
-                <span className="hero-metric-index">LATERAL DISPLACEMENT</span>
-                <strong>{fmtCm(neural.mean_abs_final_y_m)}<small>cm</small></strong>
-                <span>Mean absolute final Y; limit is 25 cm per run</span>
-              </div>
-            </aside>
+            <div className="hero-visuals">
+              <HeroVideo />
+              <aside className="hero-evidence" aria-label="Neural upright walking outcomes">
+                <div className="hero-evidence-top"><span>HEIGHT-FEEDBACK SNN RESULTS</span><span>SEEDS 7601–7603</span></div>
+                <div className="hero-metric">
+                  <span className="hero-metric-index">VISUAL HEIGHT</span>
+                  <strong>{fmtCm(neural.mean_visual_top_height_m)}<small>cm</small></strong>
+                  <span>Mean rendered-mesh top height after 0.75 s</span>
+                </div>
+                <div className="hero-metric">
+                  <span className="hero-metric-index">HEADING ERROR</span>
+                  <strong>{fmtDeg(neural.mean_peak_yaw_deg)}<small>°</small></strong>
+                  <span>Mean per-episode peak yaw</span>
+                </div>
+                <div className="hero-metric hero-metric-warning">
+                  <span className="hero-metric-index">LATERAL DISPLACEMENT</span>
+                  <strong>{fmtCm(neural.mean_abs_final_y_m)}<small>cm</small></strong>
+                  <span>Mean absolute final Y; limit is 25 cm per run</span>
+                </div>
+              </aside>
+            </div>
           </div>
         </section>
 
@@ -304,11 +306,11 @@ function App() {
             <div>
               <p className="eyebrow section-index">04 — SIMULATION RECORDINGS</p>
               <h2 id="episodes-title">Episode recordings</h2>
-              <p>The evaluation scripts save episode data for replay. This section will link MP4 captures from the actual MuJoCo simulations, identified by seed, controller configuration and task outcome.</p>
+              <p>The hero shows a MuJoCo replay of the neural height-feedback controller. The clip was rendered from saved simulator states for development seed 7601.</p>
             </div>
             <div className="archive-card">
-              <div><strong>No MP4 recordings published yet</strong><p>Current public evidence consists of the per-episode CSV files and grouped JSON summaries. Videos will only be added after corresponding MuJoCo replay captures are checked.</p></div>
-              <a href="#results">Download experiment data <span aria-hidden="true">↗</span></a>
+              <div><strong>Neural height feedback · seed 7601</strong><p>The Go2 completed the 8 s run at a commanded 0.45 m/s and exceeded the 25 cm lateral-displacement limit.</p></div>
+              <a href="/media/go2-hero.mp4">Open MuJoCo replay (MP4) <span aria-hidden="true">↗</span></a>
             </div>
           </div>
         </section>

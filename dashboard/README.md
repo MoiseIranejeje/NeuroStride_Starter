@@ -1,6 +1,6 @@
 # NeuroStride Go2 research dashboard
 
-This Vite, React, TypeScript and Tailwind site compares the MuJoCo knee-extension sweep with the neural upright-controller experiment. The dashboard summarizes the original exports in `src/evidence/` and includes the corresponding per-episode CSVs. CSV replay paths are relative to the original run directories. Replay files are not bundled. Both studies used development seeds 7601–7603, with eight-second runs at a commanded 0.45 m/s.
+This Vite, React, TypeScript and Tailwind site compares the MuJoCo knee-extension sweep with the neural upright-controller experiment. The dashboard summarizes the original exports in `src/evidence/` and includes the corresponding per-episode CSVs. CSV replay paths are relative to the original run directories. Raw simulator states are not bundled. The hero includes a rendered clip from development seed 7601. Both studies used development seeds 7601–7603, with eight-second runs at a commanded 0.45 m/s.
 
 | Export prefix | Simulator script | Original run directory |
 | --- | --- | --- |
@@ -29,8 +29,7 @@ merging to `main`. Do not merge unverified dashboard changes into production.
 
 ## Adding a genuine Go2 hero recording
 
-The hero background is **optional**. Without actual media, it remains a static
-dark background. Never insert illustrative motion and present it as an experiment.
+The hero replay is **optional**. Without video files, the hero keeps its graphite background. Never insert illustrative motion and present it as an experiment.
 
 1. Choose an **actual saved replay** `.npz` from a Go2 MuJoCo test
    (the `go2_snn_upright_walk.py` experiments save replays under

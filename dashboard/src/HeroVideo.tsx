@@ -5,16 +5,10 @@ type VideoSource = {
   mime: string
 }
 
-/**
- * A purely decorative hero video. It NEVER substitutes simulated movement:
- * /media/go2-hero.webm or /media/go2-hero.mp4 must be an actual MuJoCo recording.
- *
- * No video is currently checked into the repository. A missing file leaves
- * the existing static hero background in place. No autoplay or video fetches
- * when the user requests reduced motion or reduced data.
- */
+// Only use published MuJoCo footage. Missing media leaves the graphite hero in place.
 export function HeroVideo() {
   const [source, setSource] = useState<VideoSource | null>(null)
+  const [userPaused, setUserPaused] = useState(false)
   const videoRef = useRef<HTMLVideoElement | null>(null)
 
   useEffect(() => {
@@ -66,7 +60,7 @@ export function HeroVideo() {
     const data = window.matchMedia('(prefers-reduced-data: reduce)')
 
     const syncPlayback = () => {
-      if (motion.matches || data.matches || !inView || document.hidden) {
+      if (userPaused || motion.matches || data.matches || !inView || document.hidden) {
         video.pause()
       } else {
         void video.play().catch(() => {
@@ -92,14 +86,15 @@ export function HeroVideo() {
       motion.removeEventListener('change', syncPlayback)
       data.removeEventListener('change', syncPlayback)
     }
-  }, [source])
+  }, [source, userPaused])
 
   if (!source) return null
 
   return (
-    <div className="hero-media" aria-hidden="true">
+    <div className="hero-media">
       <video
         ref={videoRef}
+        aria-hidden="true"
         className="hero-media-video"
         src={source.url}
         muted
@@ -109,6 +104,9 @@ export function HeroVideo() {
         tabIndex={-1}
         disablePictureInPicture
       />
+      <button type="button" className="hero-media-toggle" onClick={() => setUserPaused(!userPaused)}>
+        {userPaused ? 'Play replay' : 'Pause replay'}
+      </button>
     </div>
   )
 }
