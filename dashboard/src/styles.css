@@ -173,7 +173,7 @@ tbody tr:hover { background:#edf4eb; }
 .episodes-section a { color:var(--accent); font-weight:700; text-decoration:underline; text-underline-offset:.2em; }
 .episode-download { display:inline-block; margin-top:.75rem; }
 .episode-replay { margin-top:3rem; scroll-margin-top:2rem; }
-.episode-replay video { display:block; width:min(100%,560px); aspect-ratio:16 / 9; background:#11191b; margin-bottom:.75rem; }
+.episode-replay video { display:block; width:min(100%,720px); aspect-ratio:640 / 368; background:#11191b; margin-bottom:.75rem; }
 .site-footer { background:#0b2d26; color:#9ab5a5; }
 .footer-inner { display:grid; grid-template-columns:1fr 2fr auto; align-items:center; gap:2rem; padding-block:2.5rem; }
 .footer-brand { color:#e7efe8; font-weight:720; white-space:nowrap; }

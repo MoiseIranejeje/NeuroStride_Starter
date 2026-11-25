@@ -8,3 +8,4 @@ results/
 
 # Allow the small, optimized website fallback (raw recordings stay ignored).
 !dashboard/public/media/go2-hero.mp4
+!dashboard/public/media/episodes/*/*.mp4

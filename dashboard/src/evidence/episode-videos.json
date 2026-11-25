@@ -1,0 +1,146 @@
+{
+  "extension_scan/replays/baseline_v0.45_seed7601.npz": {
+    "path": "episodes/extension_scan/baseline_v0.45_seed7601.mp4",
+    "source_sha256": "351d5660dc22214ebb55d2acb488469024cb2f71ed6003b5dfb0ae41ceecaaa6",
+    "sha256": "060bf8cc0885ad80ece2130f3bae5d2fb315817871ad53a001ca0f7b067ba93f",
+    "seconds": 8.0
+  },
+  "extension_scan/replays/fixed04_v0.45_seed7601.npz": {
+    "path": "episodes/extension_scan/fixed04_v0.45_seed7601.mp4",
+    "source_sha256": "92bf69cdd880f662b7b27524a0bc406a7b43cb10bb60c1ddb69725f0a6f4a615",
+    "sha256": "fefebb24b0a8518def2ed8f37ade755d512437ab56e0d86f5d50a573c5c6100d",
+    "seconds": 8.0
+  },
+  "extension_scan/replays/fixed08_v0.45_seed7601.npz": {
+    "path": "episodes/extension_scan/fixed08_v0.45_seed7601.mp4",
+    "source_sha256": "90b53727d24aff556f838d1b47207cdc8ed49df4cf82246d75056a3bc2b28115",
+    "sha256": "9a047405f056a827ceb375e1ed905fb6a468121f4c969c83ed672edeae50294d",
+    "seconds": 8.0
+  },
+  "extension_scan/replays/fixed12_v0.45_seed7601.npz": {
+    "path": "episodes/extension_scan/fixed12_v0.45_seed7601.mp4",
+    "source_sha256": "d3b993603dd3ca660f793812ef66ed9073116b0ecc81cfb44d17bcc91d75a5be",
+    "sha256": "b5148897dc9285933596071ad3adf8db5153fa90e3289795e45b3f7f3956c4a9",
+    "seconds": 8.0
+  },
+  "extension_scan/replays/baseline_v0.45_seed7602.npz": {
+    "path": "episodes/extension_scan/baseline_v0.45_seed7602.mp4",
+    "source_sha256": "139fb808c208d70e8d6025b15f441f8f0c4785f3275798b9969a0c81039f042e",
+    "sha256": "19c9d19f3ef50af3c1710b13af29c10c5fea3c29722c808eb11b4725f6a1436d",
+    "seconds": 8.0
+  },
+  "extension_scan/replays/fixed04_v0.45_seed7602.npz": {
+    "path": "episodes/extension_scan/fixed04_v0.45_seed7602.mp4",
+    "source_sha256": "5903dc5e08e9352f84a902ae452fe5493594c715b7d8eecb95e4f4880c3b6928",
+    "sha256": "524e337273fa03e1ef5453778ce10c499ea7d26bccd00b01e245dc8f9cc1f202",
+    "seconds": 8.0
+  },
+  "extension_scan/replays/fixed08_v0.45_seed7602.npz": {
+    "path": "episodes/extension_scan/fixed08_v0.45_seed7602.mp4",
+    "source_sha256": "06c6151137d3ec9d5055f83e424c190c76d12773927dda700025d4578e2815f1",
+    "sha256": "1958b71fd2a3bdf883a974891ff174b305c22b025541f5e0f39508723705bac5",
+    "seconds": 8.0
+  },
+  "extension_scan/replays/fixed12_v0.45_seed7602.npz": {
+    "path": "episodes/extension_scan/fixed12_v0.45_seed7602.mp4",
+    "source_sha256": "b91982b209d2b8e15702e1f2f8e7ccddff019e42a7fb6a5e1eef9a2c2bf18454",
+    "sha256": "f2f2aa746f0056776be849387514391018417e2a2ea71dbbaad6e612b7d9d254",
+    "seconds": 8.0
+  },
+  "extension_scan/replays/baseline_v0.45_seed7603.npz": {
+    "path": "episodes/extension_scan/baseline_v0.45_seed7603.mp4",
+    "source_sha256": "091b6681e9dfccb52fd92136ec9228d17f9bcd4b1031c8ffbfc9de7ba7b6d8e3",
+    "sha256": "43928e21067b5928621d54e09cc8df592730713ca7288635bc1219c91d64fbdc",
+    "seconds": 8.0
+  },
+  "extension_scan/replays/fixed04_v0.45_seed7603.npz": {
+    "path": "episodes/extension_scan/fixed04_v0.45_seed7603.mp4",
+    "source_sha256": "0ac41c19de80317dfef79d50dbf4c412843782e6127e70006c6f2dd546c34e5d",
+    "sha256": "6bb2a1ecaf751c2e2752135a74fa566935f364c1c3260fc3b0c84574114830ca",
+    "seconds": 8.0
+  },
+  "extension_scan/replays/fixed08_v0.45_seed7603.npz": {
+    "path": "episodes/extension_scan/fixed08_v0.45_seed7603.mp4",
+    "source_sha256": "17ad7188436ea5f5353206bf8bfe9ff35b7df9b5e1a5f33c6643d0944436c0fd",
+    "sha256": "033525897a2e8ab8285045a55139f039a569d9ddda5178a338b21f20ffdf319b",
+    "seconds": 8.0
+  },
+  "extension_scan/replays/fixed12_v0.45_seed7603.npz": {
+    "path": "episodes/extension_scan/fixed12_v0.45_seed7603.mp4",
+    "source_sha256": "620b42c85ce4e75c13918ddfcf1f5271901b68c70fce72b3b434e41f6fcd8cd1",
+    "sha256": "da0ea72a580c8366f1ce97bcc1c88a88076a5c71ab27182e01031276ec30bf01",
+    "seconds": 8.0
+  },
+  "development/replays/baseline_v0.45_seed7601.npz": {
+    "path": "episodes/development/baseline_v0.45_seed7601.mp4",
+    "source_sha256": "1f36932adf7b864d1cc7b63cfc8d1b5a4c950a10de4feb1e0f6170180e4957e8",
+    "sha256": "060bf8cc0885ad80ece2130f3bae5d2fb315817871ad53a001ca0f7b067ba93f",
+    "seconds": 8.0
+  },
+  "development/replays/fixed16_v0.45_seed7601.npz": {
+    "path": "episodes/development/fixed16_v0.45_seed7601.mp4",
+    "source_sha256": "31823b2d33d2ea2520d57f07dbf762c52a96617d30e3eae08bc1a6b417f4f037",
+    "sha256": "c3776df6d16502682ae00383a43eb455e0feed22a4ca161e7fd8611182ad88df",
+    "seconds": 8.0
+  },
+  "development/replays/fixed24_v0.45_seed7601.npz": {
+    "path": "episodes/development/fixed24_v0.45_seed7601.mp4",
+    "source_sha256": "531d725e26f4b3a979b20a163575e918b8c0d09139a0571c7c0e39d5673fdcb0",
+    "sha256": "ae14df37e60ad1d70c2fe559e6112b1e42ff8e904387f0f5382cab89fb8b31c1",
+    "seconds": 8.0
+  },
+  "development/replays/neural_v0.45_seed7601.npz": {
+    "path": "episodes/development/neural_v0.45_seed7601.mp4",
+    "source_sha256": "6cdf15a6115286c376b42a36ad4d4ce4b2e275f0bfda7d092476e51c486ac4ed",
+    "sha256": "cec5398e19ceab7e4e9f0407a14583a51f2d0e4967a1b1fc7501b64c05cd2674",
+    "seconds": 8.0
+  },
+  "development/replays/baseline_v0.45_seed7602.npz": {
+    "path": "episodes/development/baseline_v0.45_seed7602.mp4",
+    "source_sha256": "fe9c3af4476b9ee8ee1b8744f02252af8f5c0e3931522b22b64c736a385fb2a7",
+    "sha256": "19c9d19f3ef50af3c1710b13af29c10c5fea3c29722c808eb11b4725f6a1436d",
+    "seconds": 8.0
+  },
+  "development/replays/fixed16_v0.45_seed7602.npz": {
+    "path": "episodes/development/fixed16_v0.45_seed7602.mp4",
+    "source_sha256": "4696e5a783c164595c8913b38b68bd987146f1579226855a691677ddd9bebd9d",
+    "sha256": "0fe2969d1c3b4a1eef09bfaf9d812ccec71a90fd38bfaa53c36d45a9e6a1739a",
+    "seconds": 8.0
+  },
+  "development/replays/fixed24_v0.45_seed7602.npz": {
+    "path": "episodes/development/fixed24_v0.45_seed7602.mp4",
+    "source_sha256": "6967c22c1a4a09aaa2f79e9bade74712905dc762d7296924b9c43a604552597a",
+    "sha256": "314febbd5df185171cc5c03b0f5a0466c7472aaa9661898d28ea7201aaba9f4d",
+    "seconds": 8.0
+  },
+  "development/replays/neural_v0.45_seed7602.npz": {
+    "path": "episodes/development/neural_v0.45_seed7602.mp4",
+    "source_sha256": "eb2012266fc731bce73bc973f1ff8031f02edc2f1ece54f2301c768de6e5b2e9",
+    "sha256": "39526d5a2f297859e6453262452fbc637ff45295f49ce268ea90ac254ac77a3b",
+    "seconds": 8.0
+  },
+  "development/replays/baseline_v0.45_seed7603.npz": {
+    "path": "episodes/development/baseline_v0.45_seed7603.mp4",
+    "source_sha256": "ff82c4767b65d7a7e45836b49744877975cfdb70261a3487b9297aa582ffa7c1",
+    "sha256": "43928e21067b5928621d54e09cc8df592730713ca7288635bc1219c91d64fbdc",
+    "seconds": 8.0
+  },
+  "development/replays/fixed16_v0.45_seed7603.npz": {
+    "path": "episodes/development/fixed16_v0.45_seed7603.mp4",
+    "source_sha256": "77cf878268109e0a9a10cf33b463eba2d573a6051c5a7253e015fee5b9c5713e",
+    "sha256": "75d9a05311fb640ec670b590a947bf1e43e5d8299b16fab815079243ed7571ed",
+    "seconds": 8.0
+  },
+  "development/replays/fixed24_v0.45_seed7603.npz": {
+    "path": "episodes/development/fixed24_v0.45_seed7603.mp4",
+    "source_sha256": "103d6eb3ab5dd430f1d2366277a7115a3cf3f0881cd50038c22c271e65d4732d",
+    "sha256": "895a99da1d8777b840679389343150a36734281bc5308e826dc70fffa3e8fcfd",
+    "seconds": 8.0
+  },
+  "development/replays/neural_v0.45_seed7603.npz": {
+    "path": "episodes/development/neural_v0.45_seed7603.mp4",
+    "source_sha256": "b499b77c147aad413338b6d17bd7149e000ec8994c24d55d8aeb459a555dcc3c",
+    "sha256": "90c4585fc89d55d2eeb9d65a8cd67682b94ac2cdfe743d7b6bb9f8dc1e647671",
+    "seconds": 8.0
+  }
+}

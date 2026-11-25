@@ -8,7 +8,7 @@ import uprightSummary from './evidence/development-summary.json?url'
 import uprightEpisodes from './evidence/development-episodes.csv?url'
 import scanEpisodeCsv from './evidence/extension_scan-episodes.csv?raw'
 import uprightEpisodeCsv from './evidence/development-episodes.csv?raw'
-import replayProvenance from '../public/media/go2-hero-provenance.json'
+import episodeVideos from './evidence/episode-videos.json'
 import { HeroVideo } from './HeroVideo'
 import './styles.css'
 
@@ -97,10 +97,21 @@ const episodeRows = {
   development: readEpisodes(uprightEpisodeCsv),
 }
 
-function EpisodeExplorer() {
+const recordings: Record<string, { path: string }> = episodeVideos
+const featuredReplay = 'development/replays/neural_v0.45_seed7601.npz'
+
+function replayKey(studyId: StudyId, row: Record<string, string>) {
+  return studyId + '/' + row.replay
+}
+
+function EpisodeExplorer({ replay, setReplay }: { replay: string; setReplay: (key: string) => void }) {
   const [studyId, setStudyId] = useState<StudyId>('development')
   const [seed, setSeed] = useState('')
   const [outcome, setOutcome] = useState('')
+  const activeStudy: StudyId = replay.startsWith('development/') ? 'development' : 'extension_scan'
+  const active = episodeRows[activeStudy].find(row => replayKey(activeStudy, row) === replay)
+  const videoUrl = recordings[replay] && '/media/' + recordings[replay].path
+  const activeLabel = active && (active.mode === 'neural' ? 'Spiking height feedback' : modeLabel(active.mode))
   const rows = episodeRows[studyId]
   const seeds = [...new Set(rows.map(row => row.seed))]
   const visible = rows.filter(row =>
@@ -112,7 +123,7 @@ function EpisodeExplorer() {
       <div className="container">
         <p className="eyebrow section-index">05 — SIMULATION RECORDINGS</p>
         <h2 id="episodes-title">Episode explorer</h2>
-        <p>Inspect individual MuJoCo runs. Pass status uses all task criteria, including the 10° heading limit and the 25 cm final sideways limit.</p>
+        <p>Choose Watch replay beside a run to load its video player. Pass status uses all task criteria, including the 10° heading limit and the 25 cm final sideways limit.</p>
         <div className="episode-filters">
           <label>Study
             <select value={studyId} onChange={event => setStudyId(event.target.value as StudyId)}>
@@ -144,14 +155,16 @@ function EpisodeExplorer() {
                 <th scope="col">Outcome</th><th scope="col">Replay</th>
               </tr></thead>
               <tbody>{visible.map(row => {
-                const hasReplay = studyId === 'development'
-                  && row.replay === `replays/${replayProvenance.source_filename}`
+                const key = replayKey(studyId, row)
                 return (
                   <tr key={`${studyId}/${row.mode}/${row.seed}/${row.command_mps}`}>
                     <th scope="row">{modeLabel(row.mode)}</th><td>{row.seed}</td><td>{row.duration_s} s</td>
                     <td>{fmtCm(Math.abs(Number(row.sideways_m)))} cm</td><td>{fmtDeg(Number(row.max_abs_yaw_deg))}°</td>
                     <td>{row.pass_10deg === 'True' ? 'Passed' : 'Failed'}</td>
-                    <td>{hasReplay ? <a href="#episode-replay">Watch replay</a> : 'Unavailable'}</td>
+                    <td>{recordings[key] ? (
+                      <a href="#episode-replay" onClick={() => setReplay(key)}
+                        aria-label={`Watch replay for ${modeLabel(row.mode)}, seed ${row.seed}`}>Watch replay</a>
+                    ) : 'Unavailable'}</td>
                   </tr>
                 )
               })}</tbody>
@@ -159,15 +172,15 @@ function EpisodeExplorer() {
           </div>
         )}
         <a className="episode-download" href={studies[studyId].episodes} download>Download study CSV</a>
-        <div className="episode-replay" id="episode-replay">
-          <h3>Neural height feedback · seed 7601</h3>
-          <p>Eight-second replay rendered from saved simulator states. The Go2 ended 65.97 cm sideways.</p>
-          <video controls playsInline preload="none" aria-label="MuJoCo replay of the neural height-feedback controller, seed 7601">
-            <source src="/media/go2-hero.webm" type="video/webm" />
-            <source src="/media/go2-hero.mp4" type="video/mp4" />
-          </video>
-          <a href="/media/go2-hero.mp4">Open replay MP4</a>
-        </div>
+        {active && videoUrl && (
+          <div className="episode-replay" id="episode-replay">
+            <h3>{activeLabel} · seed {active.seed}</h3>
+            <p>{studies[activeStudy].title} · {active.duration_s} s · {fmtCm(Math.abs(Number(active.sideways_m)))} cm sideways · {active.pass_10deg === 'True' ? 'Passed' : 'Failed'}</p>
+            <video key={videoUrl} controls playsInline preload="metadata" src={videoUrl}
+              aria-label={`MuJoCo replay for ${activeLabel}, seed ${active.seed}`} />
+            <a href={videoUrl}>Open replay MP4</a>
+          </div>
+        )}
       </div>
     </section>
   )
@@ -240,6 +253,7 @@ function RunMap({ studyId, metricId, modes, seed }: {
 
 function App() {
   const [studyId, setStudyId] = useState<StudyId>('extension_scan')
+  const [replay, setReplay] = useState(featuredReplay)
   const [highlightedSeed, setHighlightedSeed] = useState('')
   const [metricId, setMetricId] = useState<MetricId>('drift')
   const study = studies[studyId]
@@ -330,7 +344,7 @@ function App() {
               <h3>Try neural height feedback</h3>
               <p>A separate spiking network adjusted knee extension from body-height error and vertical speed. Mean height rose from {fmtCm(original.mean_visual_top_height_m)} cm and peak heading error fell on average. Mean final sideways drift reached {fmtCm(neural.mean_abs_final_y_m)} cm, and every run exceeded the 25 cm limit.</p>
               <span className="card-outcome negative">0 of 3 passed all criteria</span>
-              <a className="story-link" href="#episode-replay">See the seed 7601 replay <span aria-hidden="true">↘</span></a>
+              <a className="story-link" href="#episode-replay" onClick={() => setReplay(featuredReplay)}>See the seed 7601 replay <span aria-hidden="true">↘</span></a>
             </article>
           </div>
           <div className="insight-line"><span aria-hidden="true">↳</span><p><strong>Next experiment.</strong> Adapt the gait controller to the taller stance, then test on fresh seeds to see whether the Go2 can maintain its height and stay within the heading and sideways-drift limits.</p></div>
@@ -512,7 +526,7 @@ function App() {
           </div>
         </section>
 
-        <EpisodeExplorer />
+        <EpisodeExplorer replay={replay} setReplay={setReplay} />
       </main>
 
       <footer className="site-footer">
