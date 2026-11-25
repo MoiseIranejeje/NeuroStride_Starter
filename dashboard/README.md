@@ -7,6 +7,8 @@ This Vite, React, TypeScript and Tailwind site compares the MuJoCo knee-extensio
 | `extension_scan` | `go2_knee_extension_probe.py` | `results/go2_knee_extension_probe/extension_scan` |
 | `development` | `go2_snn_upright_walk.py` | `results/go2_snn_upright_walk/development` |
 
+See the [Iterate evidence manifest](ITERATE_EVIDENCE.md) for episode identifiers, data fields and recording provenance.
+
 ## Run locally
 
 From `dashboard/`, use Node 24 and pnpm 11.25.0.
