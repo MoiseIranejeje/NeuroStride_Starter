@@ -150,25 +150,25 @@ function App() {
           </div>
           <div className="story-grid">
             <article className="story-card">
-              <span className="card-step">BASELINE / NO EXTRA EXTENSION</span>
+              <span className="card-step">MEAN FINAL SIDEWAYS DRIFT</span>
               <strong className="card-number">{fmtCm(original.mean_abs_final_y_m)}<small> cm</small></strong>
-              <h3>Original gait controller</h3>
-              <p>Frozen gait and yaw SNNs with no additional knee extension. Mean absolute final Y was 9.42 cm; all three development runs met the full 10° task criteria.</p>
-              <span className="card-outcome positive">3 of 3 passed</span>
+              <h3>Baseline gait controller</h3>
+              <p>The original gait and heading networks stayed fixed, with zero added knee extension. The number shows how far sideways the robot ended up, averaged across the three runs.</p>
+              <span className="card-outcome positive">3 of 3 passed all criteria (10° heading limit)</span>
             </article>
             <article className="story-card">
-              <span className="card-step">ADDITIONAL / HEIGHT-FEEDBACK SNN</span>
+              <span className="card-step">MEAN TOP-OF-ROBOT HEIGHT</span>
               <strong className="card-number">{fmtCm(neural.mean_visual_top_height_m)}<small> cm</small></strong>
-              <h3>Neural posture adjustment</h3>
-              <p>The new spiking module uses root-height error and vertical velocity to adjust knee extension during the gait. Mean visual top height rose from 35.86 cm to 39.49 cm.</p>
-              <span className="card-outcome neutral">3/3 completed 8 s</span>
+              <h3>Neural height feedback</h3>
+              <p>A spiking neural network adjusts knee extension using the gap between actual and target body height and how fast the body moves up or down. Mean height rose from 35.86 cm.</p>
+              <span className="card-outcome neutral">3 of 3 completed the 8-second run</span>
             </article>
             <article className="story-card story-card-critical">
-              <span className="card-step">PATH-TRACKING RESULT</span>
+              <span className="card-step">MEAN FINAL SIDEWAYS DRIFT</span>
               <strong className="card-number">{fmtCm(neural.mean_abs_final_y_m)}<small> cm</small></strong>
-              <h3>Lateral tracking failed</h3>
-              <p>Mean peak yaw decreased to 3.19°, but mean absolute final Y increased to 65.33 cm. All three trials exceeded the 25 cm final-lateral limit.</p>
-              <span className="card-outcome negative">0 of 3 passed</span>
+              <h3>Path tracking with height feedback</h3>
+              <p>Average peak heading error dropped to 3.19°. Sideways drift still increased from the 9.42 cm baseline, and every run exceeded the 25 cm limit.</p>
+              <span className="card-outcome negative">0 of 3 passed all criteria</span>
             </article>
           </div>
           <div className="insight-line"><span aria-hidden="true">↳</span><p><strong>Measured outcome:</strong> the height-feedback SNN raised mean rendered height by 3.63 cm and reduced mean peak yaw from 7.58° to 3.19°, while mean final lateral displacement increased from 9.42 cm to 65.33 cm. The combined straight-walking task failed (0/3 runs).</p></div>
