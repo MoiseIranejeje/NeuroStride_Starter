@@ -171,6 +171,7 @@ tbody tr:hover { background:#edf4eb; }
 .episode-filters select { min-height:44px; padding:.5rem; border:1px solid #8eafa0; border-radius:4px; background:#20493f; color:#eff5e9; }
 .episode-filters select:focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
 .episode-table { margin-inline:0; }
+.episode-table tbody tr:is(:hover,:focus-within) { background:#275446; }
 .episode-table table { width:100%; min-width:690px; text-align:left; font-size:.88rem; }
 .episode-table :is(th,td) { padding:.75rem; border-bottom:1px solid #557d70; }
 .episodes-section a { color:var(--accent); font-weight:700; text-decoration:underline; text-underline-offset:.2em; }
