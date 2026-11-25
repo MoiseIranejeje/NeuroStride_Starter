@@ -163,14 +163,20 @@ tbody tr:hover { background:#edf4eb; }
 .method-grid h3 { font-size:1.21rem; font-weight:700; margin:1.2rem 0 1rem; }
 .method-grid p { color:var(--muted); font-size:.92rem; }
 .episodes-section { background:#163c33; color:#eff5e9; padding-block:clamp(5rem,8vw,8rem); scroll-margin-top:1.5rem; }
-.episodes-inner { display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1fr); gap:clamp(2rem,7vw,7rem); align-items:center; }
 .episodes-section .section-index { color:var(--accent); }
 .episodes-section h2 { max-width:12ch; }
 .episodes-section p { color:#cadbd1; max-width:50ch; }
-.archive-card { padding:2.4rem; background:#20493f; border:1px solid #4d7567; }
-.archive-card strong { font-size:1.13rem; }
-.archive-card p { font-size:.89rem; margin:1rem 0 2rem; }
-.archive-card a { color:var(--accent); font-size:.87rem; font-weight:700; text-decoration:underline; text-underline-offset:.3em; }
+.episode-filters { display:flex; flex-wrap:wrap; gap:1rem; margin-block:1.75rem 1rem; }
+.episode-filters label { display:grid; gap:.4rem; font-size:.85rem; font-weight:700; }
+.episode-filters select { min-height:44px; padding:.5rem; border:1px solid #8eafa0; border-radius:4px; background:#20493f; color:#eff5e9; }
+.episode-filters select:focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
+.episode-table { margin-inline:0; }
+.episode-table table { width:100%; min-width:690px; text-align:left; font-size:.88rem; }
+.episode-table :is(th,td) { padding:.75rem; border-bottom:1px solid #557d70; }
+.episodes-section a { color:var(--accent); font-weight:700; text-decoration:underline; text-underline-offset:.2em; }
+.episode-download { display:inline-block; margin-top:.75rem; }
+.episode-replay { margin-top:3rem; scroll-margin-top:2rem; }
+.episode-replay video { display:block; width:min(100%,560px); aspect-ratio:16 / 9; background:#11191b; margin-bottom:.75rem; }
 .site-footer { background:#0b2d26; color:#9ab5a5; }
 .footer-inner { display:grid; grid-template-columns:1fr 2fr auto; align-items:center; gap:2rem; padding-block:2.5rem; }
 .footer-brand { color:#e7efe8; font-weight:720; white-space:nowrap; }
@@ -208,7 +214,6 @@ tbody tr:hover { background:#edf4eb; }
   .chart-label { font-size:.77rem; }
   .chart-value { font-size:.82rem; }
   .method-grid { grid-template-columns:1fr; gap:2rem; }
-  .episodes-inner { grid-template-columns:1fr; gap:2rem; }
   .footer-inner { grid-template-columns:1fr; gap:.7rem; }
 }
 @media (max-width:410px) {

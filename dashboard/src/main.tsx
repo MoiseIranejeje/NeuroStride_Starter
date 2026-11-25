@@ -6,6 +6,9 @@ import scanSummary from './evidence/extension_scan-summary.json?url'
 import scanEpisodes from './evidence/extension_scan-episodes.csv?url'
 import uprightSummary from './evidence/development-summary.json?url'
 import uprightEpisodes from './evidence/development-episodes.csv?url'
+import scanEpisodeCsv from './evidence/extension_scan-episodes.csv?raw'
+import uprightEpisodeCsv from './evidence/development-episodes.csv?raw'
+import replayProvenance from '../public/media/go2-hero-provenance.json'
 import { HeroVideo } from './HeroVideo'
 import './styles.css'
 
@@ -82,6 +85,97 @@ const original = upright.find(row => row.mode === 'baseline')!
 const smallOffset = scan.find(row => row.mode === 'fixed04')!
 const neural = upright.find(row => row.mode === 'neural')!
 
+// The simulator exports unquoted scalar fields and relative replay paths.
+function readEpisodes(csv: string) {
+  const [header, ...lines] = csv.trim().split(/\r?\n/)
+  const fields = header.split(',')
+  return lines.map(line => {
+    const values = line.split(',')
+    return Object.fromEntries(fields.map((field, index) => [field, values[index]]))
+  })
+}
+
+const episodeRows = {
+  extension_scan: readEpisodes(scanEpisodeCsv),
+  development: readEpisodes(uprightEpisodeCsv),
+}
+
+function EpisodeExplorer() {
+  const [studyId, setStudyId] = useState<StudyId>('development')
+  const [seed, setSeed] = useState('')
+  const [outcome, setOutcome] = useState('')
+  const rows = episodeRows[studyId]
+  const seeds = [...new Set(rows.map(row => row.seed))]
+  const visible = rows.filter(row =>
+    (!seed || row.seed === seed) && (!outcome || row.pass_10deg === outcome),
+  )
+
+  return (
+    <section className="episodes-section" id="episodes" aria-labelledby="episodes-title">
+      <div className="container">
+        <p className="eyebrow section-index">04 — SIMULATION RECORDINGS</p>
+        <h2 id="episodes-title">Episode explorer</h2>
+        <p>Inspect individual MuJoCo runs. Pass status uses all task criteria, including the 10° heading limit and the 25 cm final sideways limit.</p>
+        <div className="episode-filters">
+          <label>Study
+            <select value={studyId} onChange={event => setStudyId(event.target.value as StudyId)}>
+              <option value="development">{studies.development.title}</option>
+              <option value="extension_scan">{studies.extension_scan.title}</option>
+            </select>
+          </label>
+          <label>Seed
+            <select value={seed} onChange={event => setSeed(event.target.value)}>
+              <option value="">All seeds</option>
+              {seeds.map(value => <option key={value}>{value}</option>)}
+            </select>
+          </label>
+          <label>Outcome
+            <select value={outcome} onChange={event => setOutcome(event.target.value)}>
+              <option value="">All outcomes</option>
+              <option value="True">Passed</option>
+              <option value="False">Failed</option>
+            </select>
+          </label>
+        </div>
+        <p role="status">{visible.length} of {rows.length} runs shown</p>
+        {visible.length > 0 && (
+          <div className="table-scroll episode-table" tabIndex={0} role="region" aria-label="Episode records">
+            <table>
+              <thead><tr>
+                <th scope="col">Controller</th><th scope="col">Seed</th><th scope="col">Duration</th>
+                <th scope="col">Final sideways offset</th><th scope="col">Peak heading error</th>
+                <th scope="col">Outcome</th><th scope="col">Replay</th>
+              </tr></thead>
+              <tbody>{visible.map(row => {
+                const hasReplay = studyId === 'development'
+                  && row.replay === `replays/${replayProvenance.source_filename}`
+                return (
+                  <tr key={`${studyId}/${row.mode}/${row.seed}/${row.command_mps}`}>
+                    <th scope="row">{modeLabel(row.mode)}</th><td>{row.seed}</td><td>{row.duration_s} s</td>
+                    <td>{fmtCm(Math.abs(Number(row.sideways_m)))} cm</td><td>{fmtDeg(Number(row.max_abs_yaw_deg))}°</td>
+                    <td>{row.pass_10deg === 'True' ? 'Passed' : 'Failed'}</td>
+                    <td>{hasReplay ? <a href="#episode-replay">Watch replay</a> : 'Unavailable'}</td>
+                  </tr>
+                )
+              })}</tbody>
+            </table>
+          </div>
+        )}
+        <a className="episode-download" href={studies[studyId].episodes} download>Download study CSV</a>
+        <div className="episode-replay" id="episode-replay">
+          <h3>Neural height feedback · seed 7601</h3>
+          <p>Eight-second replay rendered from saved simulator states. The Go2 ended 65.97 cm sideways.</p>
+          <video controls playsInline preload="none" aria-label="MuJoCo replay of the neural height-feedback controller, seed 7601">
+            <source src="/media/go2-hero.webm" type="video/webm" />
+            <source src="/media/go2-hero.mp4" type="video/mp4" />
+          </video>
+          <a href="/media/go2-hero.mp4">Open replay MP4</a>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function App() {
   const [studyId, setStudyId] = useState<StudyId>('extension_scan')
   const [metricId, setMetricId] = useState<MetricId>('drift')
@@ -102,7 +196,7 @@ function App() {
             <a href="#story">Iterate</a>
             <a href="#results">Results</a>
             <a href="#methods">Protocol</a>
-            <a href="#episodes">Recordings</a>
+            <a href="#episodes">Episodes</a>
           </nav>
           <a className="header-action" href="#results">View results <span aria-hidden="true">↗</span></a>
         </div>
@@ -173,7 +267,7 @@ function App() {
               <h3>Try neural height feedback</h3>
               <p>A separate spiking network adjusted knee extension from body-height error and vertical speed. Mean height rose from {fmtCm(original.mean_visual_top_height_m)} cm and peak heading error fell on average. Mean final sideways drift reached {fmtCm(neural.mean_abs_final_y_m)} cm, and every run exceeded the 25 cm limit.</p>
               <span className="card-outcome negative">0 of 3 passed all criteria</span>
-              <a className="story-link" href="#episodes">See the seed 7601 replay <span aria-hidden="true">↘</span></a>
+              <a className="story-link" href="#episode-replay">See the seed 7601 replay <span aria-hidden="true">↘</span></a>
             </article>
           </div>
           <div className="insight-line"><span aria-hidden="true">↳</span><p><strong>Next experiment.</strong> Adapt the gait controller to the taller stance, then test on fresh seeds to see whether the Go2 can maintain its height and stay within the heading and sideways-drift limits.</p></div>
@@ -304,19 +398,7 @@ function App() {
           </div>
         </section>
 
-        <section className="episodes-section" id="episodes" aria-labelledby="episodes-title">
-          <div className="container episodes-inner">
-            <div>
-              <p className="eyebrow section-index">04 — SIMULATION RECORDINGS</p>
-              <h2 id="episodes-title">Episode recordings</h2>
-              <p>The hero shows a MuJoCo replay of the neural height-feedback controller. The clip was rendered from saved simulator states for development seed 7601.</p>
-            </div>
-            <div className="archive-card">
-              <div><strong>Neural height feedback · seed 7601</strong><p>The Go2 completed the 8 s run at a commanded 0.45 m/s and exceeded the 25 cm lateral-displacement limit.</p></div>
-              <a href="/media/go2-hero.mp4">Open MuJoCo replay (MP4) <span aria-hidden="true">↗</span></a>
-            </div>
-          </div>
-        </section>
+        <EpisodeExplorer />
       </main>
 
       <footer className="site-footer">
