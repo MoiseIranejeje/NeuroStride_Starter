@@ -52,7 +52,11 @@ p { line-height:1.65; }
 .site-nav a:hover, .header-action:hover { color:#18836a; }
 .header-action { font-size:.79rem; border-bottom:1px solid #70867c; padding-bottom:.35rem; font-weight:700; white-space:nowrap; }
 .header-action span { margin-inline-start:1rem; }
-.hero { background:var(--forest-deep); color:#f5f6ee; overflow:hidden; }
+.hero { position:relative; isolation:isolate; background:var(--forest-deep); color:#f5f6ee; overflow:hidden; }
+.hero-media { position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden; background:var(--forest-deep); }
+.hero-media-video { display:block; width:100%; height:100%; object-fit:cover; object-position:center 48%; opacity:.65; filter:saturate(.72) contrast(1.08); }
+.hero-media::after { content:""; position:absolute; inset:0; background:linear-gradient(90deg,rgba(8,39,32,.97) 0%,rgba(8,39,32,.83) 45%,rgba(8,39,32,.62) 100%),linear-gradient(0deg,rgba(8,39,32,.54),transparent 42%); }
+.hero-inner { position:relative; z-index:1; }
 .hero-inner { min-height:630px; display:grid; grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr); align-items:center; gap:clamp(3rem,8vw,8rem); padding-block:clamp(5rem,8vw,8rem); }
 .hero-eyebrow { margin-bottom:2rem; color:#d5f1a0; display:flex; align-items:center; gap:.7rem; }
 .signal-dot { display:inline-block; width:7px; height:7px; flex:none; border-radius:50%; background:var(--accent); box-shadow:0 0 0 3px rgb(207 233 140 / .12); }
@@ -191,6 +195,8 @@ tbody tr:hover { background:#edf4eb; }
   .hero-inner { grid-template-columns:1fr; padding-block:4.4rem; gap:3rem; }
   .hero h1 { font-size:clamp(2.9rem,8.8vw,4.6rem); }
   .hero-evidence { max-width:560px; }
+  .hero-media-video { object-position:58% center; opacity:.42; }
+  .hero-media::after { background:linear-gradient(180deg,rgba(8,39,32,.9),rgba(8,39,32,.82)); }
   .hero-meta { width:100%; }
   .section-intro { grid-template-columns:1fr; gap:1rem; }
   .story-grid { grid-template-columns:1fr; }
@@ -225,6 +231,7 @@ tbody tr:hover { background:#edf4eb; }
   .metric-switch button { flex:1; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .hero-media { display:none; }
   :root { scroll-behavior:auto; }
   .chart-fill { transition:none; }
   .primary-link, .site-nav a, .header-action { transition:none; }
