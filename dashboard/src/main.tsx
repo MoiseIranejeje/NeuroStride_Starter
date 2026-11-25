@@ -46,7 +46,7 @@ const metrics = {
     unit: 'cm',
     referenceLabel: '25 cm run limit',
     value: (row: EvidenceRow) => row.mean_abs_final_y_m * 100,
-    note: 'The dotted line marks the 25 cm limit. Any part of a range to its right represents sideways offsets beyond the limit.',
+    note: 'The dashed line marks the 25 cm limit. The shaded area shows offsets beyond the limit.',
   },
   height: {
     label: 'Rendered visual height',
@@ -62,7 +62,7 @@ const metrics = {
     unit: '°',
     referenceLabel: '10° run limit',
     value: (row: EvidenceRow) => row.mean_peak_yaw_deg,
-    note: 'The dotted line marks the 10° run limit. The plot uses the largest absolute heading error measured in each run.',
+    note: 'The dashed line marks the 10° run limit. The plot uses the largest absolute heading error measured in each run.',
   },
 } as const
 
@@ -173,8 +173,74 @@ function EpisodeExplorer() {
   )
 }
 
+const runPlotMetrics = {
+  height: { start: 34, end: 43, benchmark: 40, field: 'mean_visual_top_height_after_075s_m', scale: 100 },
+  yaw: { start: 0, end: 12, benchmark: 10, field: 'max_abs_yaw_deg', scale: 1 },
+  drift: { start: 0, end: 100, benchmark: 25, field: 'sideways_m', scale: 100 },
+} as const
+
+const comparisonSeeds = ['7601', '7602', '7603']
+
+function SeedSelector({ seed, onChange }: { seed: string; onChange: (seed: string) => void }) {
+  return (
+    <label className="seed-selector">
+      Highlight a run
+      <select value={seed} onChange={event => onChange(event.target.value)}>
+        <option value="">All three seeds</option>
+        {comparisonSeeds.map(value => <option key={value} value={value}>Seed {value}</option>)}
+      </select>
+    </label>
+  )
+}
+
+function RunMap({ studyId, metricId, modes, seed }: {
+  studyId: StudyId
+  metricId: MetricId
+  modes: readonly string[]
+  seed: string
+}) {
+  const metric = metrics[metricId]
+  const plot = runPlotMetrics[metricId]
+  const position = (value: number) => ((value - plot.start) / (plot.end - plot.start)) * 100 + '%'
+  const valueOf = (row: Record<string, string>) => Math.abs(Number(row[plot.field])) * plot.scale
+  const display = (value: number) => value.toFixed(2) + (metric.unit === '°' ? '°' : ' ' + metric.unit)
+  return (
+    <div className="run-map" role="group" aria-label={metric.label + ' by controller and seed'}>
+      <div className="run-map-axis">
+        <span>{plot.start}{metric.unit === '°' ? '°' : ' ' + metric.unit}</span>
+        <span>{plot.end}{metric.unit === '°' ? '°' : ' ' + metric.unit}</span>
+      </div>
+      {modes.map(mode => {
+        const runs = episodeRows[studyId].filter(run => run.mode === mode)
+        const highlighted = runs.find(run => run.seed === seed)
+        const mean = runs.reduce((sum, run) => sum + valueOf(run), 0) / runs.length
+        return (
+          <div className="run-map-row" data-neural={mode === 'neural'} key={mode}>
+            <div className="run-map-label">
+              <strong>{mode === 'baseline' ? 'Original controller' : mode === 'neural' ? 'Height-feedback SNN' : modeLabel(mode)}</strong>
+              <span>{highlighted ? display(valueOf(highlighted)) : display(mean) + ' avg'}</span>
+            </div>
+            <div className="run-map-track" aria-hidden="true">
+              {metricId !== 'height' && <div className="run-map-over" style={{ insetInlineStart: position(plot.benchmark) }} />}
+              <div className="run-map-benchmark" style={{ insetInlineStart: position(plot.benchmark) }} />
+              {runs.map(run => (
+                <span key={run.seed} className="run-map-mark"
+                  data-muted={Boolean(seed && seed !== run.seed)} data-selected={seed === run.seed}
+                  style={{ insetInlineStart: position(valueOf(run)), top: (comparisonSeeds.indexOf(run.seed) + 1) * 25 + '%' }} />
+              ))}
+            </div>
+            <span className="sr-only">{runs.map(run => 'Seed ' + run.seed + ': ' + display(valueOf(run))).join('. ')}</span>
+          </div>
+        )
+      })}
+      <p className="run-map-key"><span aria-hidden="true" />{metric.referenceLabel}</p>
+    </div>
+  )
+}
+
 function App() {
   const [studyId, setStudyId] = useState<StudyId>('extension_scan')
+  const [highlightedSeed, setHighlightedSeed] = useState('')
   const [metricId, setMetricId] = useState<MetricId>('drift')
   const study = studies[studyId]
   const metric = metrics[metricId]
@@ -317,15 +383,14 @@ function App() {
                 </div>
               </div>
 
-              <figure className="study-plot">
-                <img key={studyId + metricId} src={`/media/go2-study-${studyId}-${metricId}.png`}
-                  width="720" height="528" alt={`${metric.label} range and mean across three development seeds for ${study.title}.`} />
-                <figcaption>
-                  <strong>{metric.referenceLabel}</strong>
+              <div className="study-plot">
+                <RunMap studyId={studyId} metricId={metricId} modes={study.data.map(row => row.mode)} seed={highlightedSeed} />
+                <div className="study-plot-notes">
+                  <SeedSelector seed={highlightedSeed} onChange={setHighlightedSeed} />
                   <p>{metric.note}</p>
-                  <p>Each row shows one controller. The line spans its lowest and highest values across three matched seeds. The labeled diamond shows the mean. Open the measurement table for configuration averages or download the episode CSV for exact run values.</p>
-                </figcaption>
-              </figure>
+                  <p>Each mark is one run. Pick a seed to show its exact value for every controller here and in the SNN comparison.</p>
+                </div>
+              </div>
 
               <div className="data-bottom">
                 <div className="data-qualifier"><strong>Full-task pass:</strong> one episode must meet the duration, forward-distance, lateral-position, minimum-root-height and peak-yaw limits together.</div>
@@ -398,12 +463,13 @@ function App() {
             </figure>
           </div>
           <h4 className="trace-heading">Across all three seeds</h4>
-          <p>The line spans the lowest to highest result across the three seeds. The labeled diamond marks the mean. The dotted line shows the metric’s benchmark.</p>
+          <p>Follow one seed across all three metrics, or show all runs with the controller averages. Each row shows where the runs landed relative to the benchmark.</p>
+          <SeedSelector seed={highlightedSeed} onChange={setHighlightedSeed} />
           <div className="snn-charts">
             {([
               ['height', 'Each run contributes its mean height of the top of the rendered robot after 0.75 s. The dotted line shows the 40 cm nominal standing height. The SNN was taller on all three seeds.'],
-              ['yaw', 'Each run contributes its largest absolute heading error in an eight-second run. Both controllers stayed below the dotted 10° limit, and the SNN had less heading error on every seed.'],
-              ['drift', 'Each run contributes its absolute distance sideways when the run ended. Every SNN run exceeded the dotted 25 cm limit, while every original-controller run stayed below it.'],
+              ['yaw', 'Each run contributes its largest absolute heading error in an eight-second run. Both controllers stayed below the dashed 10° limit, and the SNN had less heading error on every seed.'],
+              ['drift', 'Each run contributes its absolute distance sideways when the run ended. Every SNN run exceeded the dashed 25 cm limit, while every original-controller run stayed below it.'],
             ] as const).map(([id, explanation]) => {
               const metric = metrics[id]
               const baselineMean = metric.value(original).toFixed(2)
@@ -411,8 +477,7 @@ function App() {
               return (
                 <figure className="snn-chart" key={id}>
                   <h5>{metric.label}</h5>
-                  <img src={`/media/go2-seed-comparison-${id}.png`} width="720" height="528" loading="lazy"
-                    alt={`${metric.label} range and mean for the original controller and the height-feedback SNN on seeds 7601, 7602, and 7603.`} />
+                  <RunMap studyId="development" metricId={id} modes={['baseline', 'neural']} seed={highlightedSeed} />
                   <figcaption>
                     <p className="snn-means">Three-run averages · {baselineMean} {metric.unit} original · {neuralMean} {metric.unit} SNN</p>
                     <p>{explanation}</p>
