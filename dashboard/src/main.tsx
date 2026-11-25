@@ -46,7 +46,7 @@ const metrics = {
     unit: 'cm',
     referenceLabel: '25 cm run limit',
     value: (row: EvidenceRow) => row.mean_abs_final_y_m * 100,
-    note: 'The dotted line marks the 25 cm limit. A point above it means the robot finished too far sideways on that run.',
+    note: 'The dotted line marks the 25 cm limit. Any part of a range to its right represents sideways offsets beyond the limit.',
   },
   height: {
     label: 'Rendered visual height',
@@ -54,7 +54,7 @@ const metrics = {
     unit: 'cm',
     referenceLabel: '40 cm nominal height',
     value: (row: EvidenceRow) => row.mean_visual_top_height_m * 100,
-    note: 'The 40 cm line is the manufacturer’s nominal overall standing height. The points measure the average height of the top of the rendered robot after the first 0.75 seconds.',
+    note: 'The 40 cm line is the manufacturer’s nominal overall standing height. Each run measures the average height of the top of the rendered robot after the first 0.75 seconds.',
   },
   yaw: {
     label: 'Mean peak heading error',
@@ -62,7 +62,7 @@ const metrics = {
     unit: '°',
     referenceLabel: '10° run limit',
     value: (row: EvidenceRow) => row.mean_peak_yaw_deg,
-    note: 'The dotted line marks the 10° run limit. Each point is the largest absolute heading error measured during that run.',
+    note: 'The dotted line marks the 10° run limit. The plot uses the largest absolute heading error measured in each run.',
   },
 } as const
 
@@ -319,11 +319,11 @@ function App() {
 
               <figure className="study-plot">
                 <img key={studyId + metricId} src={`/media/go2-study-${studyId}-${metricId}.png`}
-                  width="720" height="528" alt={`${metric.label} by development seed for ${study.title}.`} />
+                  width="720" height="528" alt={`${metric.label} range and mean across three development seeds for ${study.title}.`} />
                 <figcaption>
                   <strong>{metric.referenceLabel}</strong>
                   <p>{metric.note}</p>
-                  <p>Each line follows one controller configuration across three matched seeds. Each point is one run. Open the measurement table for configuration averages or download the episode CSV for exact run values.</p>
+                  <p>Each row shows one controller. The line spans its lowest and highest values across three matched seeds. The labeled diamond shows the mean. Open the measurement table for configuration averages or download the episode CSV for exact run values.</p>
                 </figcaption>
               </figure>
 
@@ -398,12 +398,12 @@ function App() {
             </figure>
           </div>
           <h4 className="trace-heading">Across all three seeds</h4>
-          <p>Each marker represents one completed run. Lines help you follow the same controller across matched seeds. The figures above show how the measurements changed within one run.</p>
+          <p>The line spans the lowest to highest result across the three seeds. The labeled diamond marks the mean. The dotted line shows the metric’s benchmark.</p>
           <div className="snn-charts">
             {([
-              ['height', 'Each point is the mean height of the top of the rendered robot after 0.75 s. The dotted line shows the 40 cm nominal standing height. The SNN was taller on all three seeds.'],
-              ['yaw', 'Each point is the largest absolute heading error in an eight-second run. Both controllers stayed below the dotted 10° limit, and the SNN had less heading error on every seed.'],
-              ['drift', 'Each point is the absolute distance sideways when the run ended. Every SNN run exceeded the dotted 25 cm limit, while every original-controller run stayed below it.'],
+              ['height', 'Each run contributes its mean height of the top of the rendered robot after 0.75 s. The dotted line shows the 40 cm nominal standing height. The SNN was taller on all three seeds.'],
+              ['yaw', 'Each run contributes its largest absolute heading error in an eight-second run. Both controllers stayed below the dotted 10° limit, and the SNN had less heading error on every seed.'],
+              ['drift', 'Each run contributes its absolute distance sideways when the run ended. Every SNN run exceeded the dotted 25 cm limit, while every original-controller run stayed below it.'],
             ] as const).map(([id, explanation]) => {
               const metric = metrics[id]
               const baselineMean = metric.value(original).toFixed(2)
@@ -412,7 +412,7 @@ function App() {
                 <figure className="snn-chart" key={id}>
                   <h5>{metric.label}</h5>
                   <img src={`/media/go2-seed-comparison-${id}.png`} width="720" height="528" loading="lazy"
-                    alt={`${metric.label} for the original controller and the height-feedback SNN on seeds 7601, 7602, and 7603.`} />
+                    alt={`${metric.label} range and mean for the original controller and the height-feedback SNN on seeds 7601, 7602, and 7603.`} />
                   <figcaption>
                     <p className="snn-means">Three-run averages · {baselineMean} {metric.unit} original · {neuralMean} {metric.unit} SNN</p>
                     <p>{explanation}</p>
