@@ -10,20 +10,20 @@ import './styles.css'
 
 const studies = {
   extension_scan: {
-    title: 'Small extensions',
-    label: 'Experiment 02',
-    subtitle: 'How far can we extend the legs before path tracking breaks?',
-    reading: 'The +0.04 rad stance increased visual height and slightly reduced lateral error on three development starts. At +0.12 rad, all three runs failed the full straight-walking test.',
+    title: 'Fixed knee extensions',
+    label: 'STUDY A / STANCE OFFSETS',
+    subtitle: 'Effect of fixed knee-extension offsets on the walking trajectory',
+    reading: 'At +0.04 rad, mean rendered-mesh height increased from 35.86 to 36.61 cm and mean absolute final lateral displacement decreased from 9.42 to 7.89 cm (3/3 full-task passes). At +0.12 rad, mean lateral displacement reached 32.71 cm (0/3 passes).',
     data: scan,
     summary: scanSummary,
     episodes: scanEpisodes,
     script: 'go2_knee_extension_probe.py',
   },
   development: {
-    title: 'Upright SNN',
-    label: 'Experiment 01',
-    subtitle: 'A third spiking controller regulates leg extension in real time.',
-    reading: 'The new posture SNN held the rendered robot near 40 cm and improved yaw, but increased average final lateral drift to 65.33 cm. None of its three runs passed.',
+    title: 'Spiking height feedback',
+    label: 'STUDY B / NEURAL FEEDBACK',
+    subtitle: 'Effect of a spiking height-feedback controller on locomotion and path tracking',
+    reading: 'A separate spiking controller adjusts leg extension from root-height error and vertical velocity. Trained by supervised imitation of an analytic feedback rule, it reached 39.49 cm mean visual height but 65.33 cm mean absolute final lateral displacement (0/3 full-task passes).',
     data: upright,
     summary: uprightSummary,
     episodes: uprightEpisodes,
@@ -79,7 +79,6 @@ function modeLabel(mode: string) {
 
 const original = upright.find(row => row.mode === 'baseline')!
 const neural = upright.find(row => row.mode === 'neural')!
-const modest = scan.find(row => row.mode === 'fixed04')!
 
 function App() {
   const [studyId, setStudyId] = useState<StudyId>('extension_scan')
@@ -98,12 +97,12 @@ function App() {
             <span>NEURO<span className="brand-weight">STRIDE</span></span>
           </a>
           <nav aria-label="Site navigation" className="site-nav">
-            <a href="#story">The story</a>
-            <a href="#results">Evidence</a>
-            <a href="#methods">Method</a>
-            <a href="#episodes">Episodes</a>
+            <a href="#story">Research question</a>
+            <a href="#results">Results</a>
+            <a href="#methods">Protocol</a>
+            <a href="#episodes">Recordings</a>
           </nav>
-          <a className="header-action" href="#results">Explore the data <span aria-hidden="true">↗</span></a>
+          <a className="header-action" href="#results">View results <span aria-hidden="true">↗</span></a>
         </div>
       </header>
 
@@ -111,77 +110,75 @@ function App() {
         <section className="hero" aria-labelledby="hero-heading">
           <div className="container hero-inner">
             <div className="hero-copy">
-              <p className="eyebrow hero-eyebrow"><span className="signal-dot" /> NEUROSTRIDE / RESEARCH NOTE 001</p>
-              <h1 id="hero-heading">Standing taller.<br /><em>Missing the line.</em></h1>
-              <p className="hero-description">We taught a simulated Unitree Go2 to walk with spiking neural networks. Making it stand taller seemed like progress—until we measured where it actually ended up.</p>
+              <p className="eyebrow hero-eyebrow"><span className="signal-dot" /> NEUROSTRIDE / MUJOCO GO2 / SNN CONTROL</p>
+              <h1 id="hero-heading">Spiking neural control<br /><em>of Unitree Go2.</em></h1>
+              <p className="hero-description">We investigate whether spiking neural network (SNN) controllers can maintain forward locomotion, heading, and lateral path accuracy as the Go2 leg posture changes. The experiments compare fixed knee-extension offsets with a separately trained spiking height-feedback controller in MuJoCo.</p>
               <div className="hero-actions">
-                <a className="primary-link" href="#story">Read the discovery <span aria-hidden="true">↘</span></a>
-                <span className="hero-meta">MuJoCo · 0.45 m/s command · 8 s runs</span>
+                <a className="primary-link" href="#story">Research question <span aria-hidden="true">↘</span></a>
+                <span className="hero-meta">Flat ground · 0.45 m/s command · 8 s · 3 seeds per mode</span>
               </div>
             </div>
             <aside className="hero-evidence" aria-label="Neural upright walking outcomes">
-              <div className="hero-evidence-top"><span>THE EXPERIMENT IN THREE NUMBERS</span><span>GO2 / ITERATE</span></div>
+              <div className="hero-evidence-top"><span>HEIGHT-FEEDBACK SNN RESULTS</span><span>SEEDS 7601–7603</span></div>
               <div className="hero-metric">
-                <span className="hero-metric-index">01 / POSTURE</span>
+                <span className="hero-metric-index">VISUAL HEIGHT</span>
                 <strong>{fmtCm(neural.mean_visual_top_height_m)}<small>cm</small></strong>
-                <span>Mean rendered top height, neural mode</span>
+                <span>Mean rendered-mesh top height after 0.75 s</span>
               </div>
               <div className="hero-metric">
-                <span className="hero-metric-index">02 / HEADING</span>
+                <span className="hero-metric-index">HEADING ERROR</span>
                 <strong>{fmtDeg(neural.mean_peak_yaw_deg)}<small>°</small></strong>
-                <span>Mean peak yaw across three starts</span>
+                <span>Mean per-episode peak yaw</span>
               </div>
               <div className="hero-metric hero-metric-warning">
-                <span className="hero-metric-index">03 / PATH</span>
+                <span className="hero-metric-index">LATERAL DISPLACEMENT</span>
                 <strong>{fmtCm(neural.mean_abs_final_y_m)}<small>cm</small></strong>
-                <span>Mean final sideways offset · failed the 25 cm limit</span>
+                <span>Mean absolute final Y; limit is 25 cm per run</span>
               </div>
-              <div className="hero-evidence-bottom">Measured simulation results. No real-robot performance is claimed.</div>
             </aside>
           </div>
         </section>
 
         <section className="story-section container section" id="story" aria-labelledby="story-title">
           <div className="section-intro">
-            <p className="eyebrow section-index">01 — THE FINDING</p>
-            <h2 id="story-title">A straighter heading<br />isn’t a straighter path.</h2>
-            <p className="section-lede">The posture controller did what it was trained to do: adjust leg extension using height and vertical-velocity feedback. But the walking network was learned for a different stance. Our measurements exposed the trade-off.</p>
+            <p className="eyebrow section-index">01 — RESEARCH QUESTION</p>
+            <h2 id="story-title">How does leg extension<br />affect SNN locomotion?</h2>
+            <p className="section-lede">We hold the existing gait and yaw spiking networks fixed and vary the leg-extension control. One experiment uses fixed knee offsets; another uses a new spiking network trained to imitate an analytic height-and-vertical-velocity feedback law. We measure visual height, torso tilt, heading and lateral drift in matched simulation starts.</p>
           </div>
           <div className="story-grid">
             <article className="story-card">
-              <span className="card-step">BEFORE / FROZEN WALKING SNN</span>
+              <span className="card-step">BASELINE / NO EXTRA EXTENSION</span>
               <strong className="card-number">{fmtCm(original.mean_abs_final_y_m)}<small> cm</small></strong>
-              <h3>The route held.</h3>
-              <p>Original gait and yaw networks, no added knee extension. All {original.pass_10_count} of {original.n} development runs passed the full straight-walk criteria.</p>
+              <h3>Original gait controller</h3>
+              <p>Frozen gait and yaw SNNs with no additional knee extension. Mean absolute final Y was 9.42 cm; all three development runs met the full 10° task criteria.</p>
               <span className="card-outcome positive">3 of 3 passed</span>
             </article>
             <article className="story-card">
-              <span className="card-step">AFTER / NEW POSTURE SNN</span>
+              <span className="card-step">ADDITIONAL / HEIGHT-FEEDBACK SNN</span>
               <strong className="card-number">{fmtCm(neural.mean_visual_top_height_m)}<small> cm</small></strong>
-              <h3>The body rose.</h3>
-              <p>Height feedback was supplied by a new spiking module. The robot finished every eight-second episode, with a much taller rendered posture.</p>
-              <span className="card-outcome neutral">Height improved</span>
+              <h3>Neural posture adjustment</h3>
+              <p>The new spiking module uses root-height error and vertical velocity to adjust knee extension during the gait. Mean visual top height rose from 35.86 cm to 39.49 cm.</p>
+              <span className="card-outcome neutral">3/3 completed 8 s</span>
             </article>
             <article className="story-card story-card-critical">
-              <span className="card-step">THE UNEXPECTED RESULT</span>
+              <span className="card-step">PATH-TRACKING RESULT</span>
               <strong className="card-number">{fmtCm(neural.mean_abs_final_y_m)}<small> cm</small></strong>
-              <h3>The route slipped.</h3>
-              <p>Despite low heading error, the taller neural configuration finished far outside the 25 cm lateral limit in all three tests.</p>
+              <h3>Lateral tracking failed</h3>
+              <p>Mean peak yaw decreased to 3.19°, but mean absolute final Y increased to 65.33 cm. All three trials exceeded the 25 cm final-lateral limit.</p>
               <span className="card-outcome negative">0 of 3 passed</span>
             </article>
           </div>
-          <div className="insight-line"><span aria-hidden="true">↳</span><p><strong>The lesson:</strong> orientation, body height and route accuracy are separate measurements. Optimizing one does not guarantee the others.</p></div>
+          <div className="insight-line"><span aria-hidden="true">↳</span><p><strong>Measured outcome:</strong> the height-feedback SNN raised mean rendered height by 3.63 cm and reduced mean peak yaw from 7.58° to 3.19°, while mean final lateral displacement increased from 9.42 cm to 65.33 cm. The combined straight-walking task failed (0/3 runs).</p></div>
         </section>
 
         <section className="lab-section" id="results" aria-labelledby="results-title">
           <div className="container">
             <div className="lab-heading">
               <div>
-                <p className="eyebrow section-index">02 — EXPERIMENT DESK</p>
-                <h2 id="results-title">See the evidence.</h2>
-                <p>Every number below comes from stored MuJoCo experiment summaries. Change the study or measurement to investigate the trade-off.</p>
+                <p className="eyebrow section-index">02 — CONTROLLER COMPARISONS</p>
+                <h2 id="results-title">Experimental results</h2>
+                <p>Compare recorded MuJoCo evaluation results from seeds 7601–7603. Select a controller study and measurement; the CSV downloads contain the individual episode data.</p>
               </div>
-              <div className="lab-method-tag"><span className="signal-dot" /> REAL SIMULATION DATA<br /><small>Not a scripted animation</small></div>
             </div>
 
             <div className="study-switch" role="group" aria-label="Choose an experiment">
@@ -196,13 +193,13 @@ function App() {
             <div className="analysis-panel">
               <div className="analysis-header">
                 <div className="analysis-copy">
-                  <p className="eyebrow">COMPARATIVE STUDY / {study.data[0].n} STARTS PER CONFIGURATION</p>
+                  <p className="eyebrow">MUJOCO EVALUATION / {study.data[0].n} DEVELOPMENT STARTS PER CONDITION</p>
                   <h3>{study.subtitle}</h3>
                   <p aria-live="polite">{study.reading}</p>
                 </div>
                 <div className="analysis-protocol">
-                  <span>Test conditions</span>
-                  <strong>8 seconds / flat</strong>
+                  <span>Test protocol</span>
+                  <strong>8 s · flat ground</strong>
                   <span>Commanded 0.45 m/s</span>
                   <span>Seeds 7601–7603</span>
                 </div>
@@ -210,7 +207,7 @@ function App() {
 
               <div className="chart-heading">
                 <div>
-                  <p className="eyebrow">SELECT A MEASUREMENT</p>
+                  <p className="eyebrow">SELECT PLOTTED METRIC</p>
                   <h4>{metric.label}</h4>
                 </div>
                 <div className="metric-switch" role="group" aria-label="Choose chart measurement">
@@ -240,7 +237,7 @@ function App() {
               </div>
 
               <div className="data-bottom">
-                <div className="data-qualifier"><strong>Honest comparison.</strong> A configuration only passes if an individual run meets duration, forward, lateral, height and yaw conditions together.</div>
+                <div className="data-qualifier"><strong>Full-task pass:</strong> one episode must meet the duration, forward-distance, lateral-position, minimum-root-height and peak-yaw limits together.</div>
                 <div className="data-exports">
                   <a href={study.summary} download={studyId + '-summary.json'}>Summary JSON <span aria-hidden="true">↗</span></a>
                   <a href={study.episodes} download={studyId + '-episodes.csv'}>Episode CSV <span aria-hidden="true">↗</span></a>
@@ -277,40 +274,39 @@ function App() {
 
         <section className="method-section container section" id="methods" aria-labelledby="methods-title">
           <div className="method-intro">
-            <p className="eyebrow section-index">03 — HOW WE TESTED</p>
-            <h2 id="methods-title">No perfect runs.<br />No hidden failures.</h2>
+            <p className="eyebrow section-index">03 — METHODOLOGY</p>
+            <h2 id="methods-title">Simulation and<br />evaluation protocol</h2>
           </div>
           <div className="method-grid">
             <article>
               <span className="method-number">01</span>
-              <h3>Frozen walking networks</h3>
-              <p>All four conditions in each study share the existing gait SNN and spiking yaw controller. The upright study also tests a separately trained height-feedback SNN, while the fixed modes use conventional leg offsets.</p>
+              <h3>Controller architecture</h3>
+              <p>The existing gait SNN outputs 12 joint actions; a separate yaw SNN supplies heading correction. Both remain frozen. The additional height SNN was trained by supervised imitation of an analytic feedback controller, not end-to-end reinforcement learning. Motor torques use a conventional PD controller.</p>
             </article>
             <article>
               <span className="method-number">02</span>
-              <h3>One explicit pass rule</h3>
-              <p>Each run must last 8 s, move at least 1.5 m forward, finish within 25 cm laterally and keep root height at least 18 cm. The heading criteria are reported separately at 10° and 15° peak yaw.</p>
+              <h3>Full-task success criteria</h3>
+              <p>An episode must complete 8 s, move at least 1.5 m forward, end within ±0.25 m laterally and maintain root height ≥0.18 m. Two success columns use per-episode peak yaw thresholds of 10° and 15°. All criteria must hold for a pass.</p>
             </article>
             <article>
               <span className="method-number">03</span>
-              <h3>What remains unproven</h3>
-              <p>These studies use three already examined starts, one flat terrain and one commanded speed. A visual mesh height near 40 cm is not proof of physical robot performance or reliable unseen-start navigation.</p>
+              <h3>Measurement limitations</h3>
+              <p>Visual height is the highest rendered-mesh point after the first 0.75 s, not the torso-origin height. Only three development starts at 0.45 m/s on flat terrain were examined. Generalization, foot-contact mechanisms and real hardware have not been established.</p>
             </article>
           </div>
-          <div className="method-callout"><span className="eyebrow">NEXT QUESTION</span><p>Can a stance-adapted spiking gait preserve low lateral drift while keeping Go2 close to its natural 40 cm visual height?</p></div>
+          <div className="method-callout"><span className="eyebrow">NEXT TEST</span><p>Adapt the locomotion controller to the taller nominal stance and test on new seeds, with height, heading error and lateral displacement evaluated together.</p></div>
         </section>
 
         <section className="episodes-section" id="episodes" aria-labelledby="episodes-title">
           <div className="container episodes-inner">
             <div>
-              <p className="eyebrow section-index">04 — EPISODE ARCHIVE</p>
-              <h2 id="episodes-title">The runs, not a rendering.</h2>
-              <p>Recorded MuJoCo episodes will live here alongside their actual seed, controller and outcome. We will publish real MP4 captures—not preprogrammed robot motion or illustrative footage presented as evidence.</p>
+              <p className="eyebrow section-index">04 — SIMULATION RECORDINGS</p>
+              <h2 id="episodes-title">Episode recordings</h2>
+              <p>The evaluation scripts save episode data for replay. This section will link MP4 captures from the actual MuJoCo simulations, identified by seed, controller configuration and task outcome.</p>
             </div>
             <div className="archive-card">
-              <span className="archive-icon" aria-hidden="true">▶</span>
-              <div><strong>Video episodes are being prepared.</strong><p>No verified MP4 footage has been added to this public archive yet. The current evidence can already be inspected and downloaded above.</p></div>
-              <a href="#results">Explore the measurements <span aria-hidden="true">↗</span></a>
+              <div><strong>No MP4 recordings published yet</strong><p>Current public evidence consists of the per-episode CSV files and grouped JSON summaries. Videos will only be added after corresponding MuJoCo replay captures are checked.</p></div>
+              <a href="#results">Download experiment data <span aria-hidden="true">↗</span></a>
             </div>
           </div>
         </section>
@@ -319,7 +315,7 @@ function App() {
       <footer className="site-footer">
         <div className="container footer-inner">
           <span className="footer-brand">∿ NeuroStride</span>
-          <p>An open research record of simulated spiking locomotion. Built to show what worked—and what did not.</p>
+          <p>Spiking neural control experiments using Unitree Go2 in MuJoCo. Simulation results only.</p>
           <a href="#top">Back to top ↑</a>
         </div>
       </footer>
