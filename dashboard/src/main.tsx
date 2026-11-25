@@ -407,6 +407,27 @@ function App() {
           </div>
           <h3>How it performed</h3>
           <p>On the same three development seeds, the original controller passed {original.pass_10_count} of {original.n} runs and the height-feedback SNN passed {neural.pass_10_count} of {neural.n}. The SNN increased height and reduced heading error, but every SNN run exceeded the final sideways limit.</p>
+          <h4 className="trace-heading">Inside one run · seed 7601</h4>
+          <p>These traces compare the original controller and the height-feedback SNN from the same MuJoCo starting seed at 0.45 m/s. The charts below summarize all three seeds.</p>
+          <div className="trace-grid">
+            <figure>
+              <img src="/media/go2-seed7601-trajectory.png" width="1008" height="576" loading="lazy" alt="Forward versus sideways displacement. The SNN path passes the 0.25 m sideways limit, while the original path stays inside it." />
+              <figcaption><strong>Walking path.</strong> Read left to right as the robot moves forward. The dotted lines mark ±25 cm sideways. The original run ended 9.52 cm off course, while the SNN run ended 65.97 cm off course.</figcaption>
+            </figure>
+            <figure>
+              <img src="/media/go2-seed7601-pitch.png" width="1008" height="576" loading="lazy" alt="Torso pitch in degrees over eight seconds for both controllers." />
+              <figcaption><strong>Torso pitch.</strong> This measures forward and backward tilt over time. Repeated peaks show how the torso rocks during the gait.</figcaption>
+            </figure>
+            <figure>
+              <img src="/media/go2-seed7601-roll.png" width="1008" height="576" loading="lazy" alt="Torso roll in degrees over eight seconds for both controllers." />
+              <figcaption><strong>Torso roll.</strong> This measures side-to-side tilt over time. Values above and below zero show the torso leaning in opposite directions.</figcaption>
+            </figure>
+            <figure>
+              <img src="/media/go2-seed7601-heading.png" width="1008" height="576" loading="lazy" alt="Heading error over time. The SNN stays closer to zero, and both runs stay within the 10-degree limit." />
+              <figcaption><strong>Heading error.</strong> Zero means the robot faces its starting direction. The dotted lines mark ±10°. Both runs stayed within that limit, even though the SNN drifted farther sideways.</figcaption>
+            </figure>
+          </div>
+          <h4 className="trace-heading">Across all three seeds</h4>
           <div className="snn-charts">
             {(['height', 'yaw', 'drift'] as const).map(id => {
               const metric = metrics[id]

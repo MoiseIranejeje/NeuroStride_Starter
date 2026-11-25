@@ -243,3 +243,9 @@ tbody tr:hover { background:#edf4eb; }
 .snn-chart h4 { font-size:1.1rem; font-weight:700; margin-bottom:.35rem; }
 .snn-chart .snn-change { color:#205d4c; font-size:.82rem; font-weight:700; margin-bottom:.85rem; }
 .snn-chart .snn-change[data-metric="drift"] { color:#983b29; }
+
+.trace-heading { margin:2rem 0 .65rem; font-size:1.2rem; font-weight:750; }
+.trace-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,470px),1fr)); gap:1rem; }
+.trace-grid figure { margin:0; min-width:0; border:1px solid var(--hairline); background:#fff; }
+.trace-grid img { display:block; width:100%; height:auto; }
+.trace-grid figcaption { padding:1rem; font-size:.9rem; color:var(--muted); line-height:1.55; }

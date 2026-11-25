@@ -29,8 +29,12 @@ The full-task criteria also cover run duration, forward distance, final sideways
 
 The [WebM](public/media/go2-hero.webm) and [MP4](public/media/go2-hero.mp4) are two encodings of the same 8-second replay. They map to `(development, neural, 7601, 0.45)`. The episode completed 8 seconds and ended 0.65973 m sideways, exceeding the 0.25 m limit. The [provenance record](public/media/go2-hero-provenance.json) lists the source filename and checksums for both encodings.
 
+## Seed 7601 trace plots
+
+The trajectory, pitch, roll and heading plots use saved frames from the baseline and neural replays in the development study. The neural replay checksum was verified directly against the local source and matches the published video provenance. Regenerate the PNGs with `python dashboard/plot_iterate_traces.py <development-replay-directory>` using NumPy and Matplotlib.
+
 ## Evidence still to collect
 
-- Raw simulation replays referenced by the exports are outside this checkout. The source replay checksum is recorded in provenance and awaits direct verification against the raw file.
+- Raw simulation replays referenced by the exports are outside this checkout. The neural seed 7601 source replay was verified in the local simulator checkout.
 - The other episodes have no published recording mapped in this inventory.
 - Research references and any evidence outside these two studies still need to be inventoried.
