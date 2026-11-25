@@ -6,6 +6,7 @@ import scanSummary from './evidence/extension_scan-summary.json?url'
 import scanEpisodes from './evidence/extension_scan-episodes.csv?url'
 import uprightSummary from './evidence/development-summary.json?url'
 import uprightEpisodes from './evidence/development-episodes.csv?url'
+import { HeroVideo } from './HeroVideo'
 import './styles.css'
 
 const studies = {
@@ -108,6 +109,7 @@ function App() {
 
       <main id="top">
         <section className="hero" aria-labelledby="hero-heading">
+          <HeroVideo />
           <div className="container hero-inner">
             <div className="hero-copy">
               <p className="eyebrow hero-eyebrow"><span className="signal-dot" /> NEUROSTRIDE / MUJOCO GO2 / SNN CONTROL</p>
