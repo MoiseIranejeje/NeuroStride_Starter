@@ -46,6 +46,7 @@ const metrics = {
     unit: 'cm',
     scale: 100,
     reference: 25,
+    referenceLabel: '25 cm run limit',
     value: (row: EvidenceRow) => row.mean_abs_final_y_m * 100,
     note: 'The dashed line marks the 25 cm final-offset limit for an individual run. Bars show averages; the pass counts use every criterion on individual runs.',
   },
@@ -55,15 +56,17 @@ const metrics = {
     unit: 'cm',
     scale: 45,
     reference: 40,
+    referenceLabel: '40 cm nominal height',
     value: (row: EvidenceRow) => row.mean_visual_top_height_m * 100,
     note: 'The 40 cm line is the manufacturer’s nominal overall standing height. These bars measure the top of the rendered MuJoCo mesh, not the torso origin or physical hardware.',
   },
   yaw: {
-    label: 'Mean peak yaw',
+    label: 'Mean peak heading error',
     short: 'Heading error',
     unit: '°',
     scale: 12,
     reference: 10,
+    referenceLabel: '10° run limit',
     value: (row: EvidenceRow) => row.mean_peak_yaw_deg,
     note: 'The dashed line marks the 10° maximum yaw limit for an individual run. Low yaw means the robot is oriented forward; it does not establish low sideways drift.',
   },
@@ -183,21 +186,27 @@ function MetricChart({ metric, rows }: {
   const lineAt = metric.reference / metric.scale * 100
   return (
     <div className="chart" role="group" aria-label={'Comparison of ' + metric.label.toLowerCase()}>
-      <div className="chart-scale" aria-hidden="true"><span>0 {metric.unit}</span><span>{metric.scale / 2} {metric.unit}</span><span>{metric.scale} {metric.unit}</span></div>
       <ul className="chart-bars">
-        {rows.map(row => (
-          <li className="chart-row" key={row.mode}>
-            <span className="chart-label">{row.mode === 'neural' ? 'Height-feedback SNN' : modeLabel(row.mode)}</span>
-            <div className="chart-track" aria-hidden="true">
-              <div className={'chart-fill' + (row.mode === 'neural' ? ' neural' : '')}
-                style={{ width: metric.value(row) / metric.scale * 100 + '%' }} />
-              <div className="chart-target" style={{ insetInlineStart: lineAt + '%' }} />
-            </div>
-            <strong className="chart-value">{metric.value(row).toFixed(2)}<small> {metric.unit}</small></strong>
-          </li>
-        ))}
+        {rows.map(row => {
+          const value = metric.value(row)
+          return (
+            <li className="chart-row" key={row.mode}>
+              <span className="chart-label">{row.mode === 'neural' ? 'Height-feedback SNN' : modeLabel(row.mode)}</span>
+              <strong className="chart-value">{value.toFixed(2)}<small> {metric.unit}</small></strong>
+              <div className="chart-track" aria-hidden="true">
+                <div className={'chart-fill' + (row.mode === 'neural' ? ' neural' : '')}
+                  style={{ width: Math.min(100, value / metric.scale * 100) + '%' }} />
+                <div className="chart-target" style={{ insetInlineStart: lineAt + '%' }} />
+              </div>
+            </li>
+          )
+        })}
       </ul>
-      <p className="chart-note"><span className="marker-key" aria-hidden="true" />{metric.note}</p>
+      <div className="chart-scale" aria-hidden="true">
+        {[0, .25, .5, .75, 1].map(tick => <span key={tick}>{metric.scale * tick}</span>)}
+      </div>
+      <p className="chart-reference"><span className="marker-key" aria-hidden="true" />{metric.referenceLabel}</p>
+      <p className="chart-note">{metric.note}</p>
     </div>
   )
 }
@@ -399,12 +408,19 @@ function App() {
           <h3>How it performed</h3>
           <p>On the same three development seeds, the original controller passed {original.pass_10_count} of {original.n} runs and the height-feedback SNN passed {neural.pass_10_count} of {neural.n}. The SNN increased height and reduced heading error, but every SNN run exceeded the final sideways limit.</p>
           <div className="snn-charts">
-            {(['height', 'yaw', 'drift'] as const).map(id => (
-              <div className="snn-chart" key={id}>
-                <h4>{metrics[id].label}</h4>
-                <MetricChart metric={metrics[id]} rows={[original, neural]} />
-              </div>
-            ))}
+            {(['height', 'yaw', 'drift'] as const).map(id => {
+              const metric = metrics[id]
+              const change = metric.value(neural) - metric.value(original)
+              return (
+                <div className="snn-chart" key={id}>
+                  <h4>{metric.label}</h4>
+                  <p className="snn-change" data-metric={id}>
+                    {Math.abs(change).toFixed(2)}{metric.unit === '°' ? '°' : ' ' + metric.unit} {change > 0 ? 'higher' : 'lower'} with SNN
+                  </p>
+                  <MetricChart metric={metric} rows={[original, neural]} />
+                </div>
+              )
+            })}
           </div>
         </section>
 
