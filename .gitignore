@@ -5,3 +5,6 @@ results/
 *.mp4
 *.gif
 .DS_Store
+
+# Allow the small, optimized website fallback (raw recordings stay ignored).
+!dashboard/public/media/go2-hero.mp4
