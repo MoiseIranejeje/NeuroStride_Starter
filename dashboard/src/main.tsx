@@ -113,7 +113,7 @@ function EpisodeExplorer() {
   return (
     <section className="episodes-section" id="episodes" aria-labelledby="episodes-title">
       <div className="container">
-        <p className="eyebrow section-index">04 — SIMULATION RECORDINGS</p>
+        <p className="eyebrow section-index">05 — SIMULATION RECORDINGS</p>
         <h2 id="episodes-title">Episode explorer</h2>
         <p>Inspect individual MuJoCo runs. Pass status uses all task criteria, including the 10° heading limit and the 25 cm final sideways limit.</p>
         <div className="episode-filters">
@@ -176,12 +176,37 @@ function EpisodeExplorer() {
   )
 }
 
+function MetricChart({ metric, rows }: {
+  metric: (typeof metrics)[MetricId]
+  rows: readonly (EvidenceRow & { mode: string })[]
+}) {
+  const lineAt = metric.reference / metric.scale * 100
+  return (
+    <div className="chart" role="group" aria-label={'Comparison of ' + metric.label.toLowerCase()}>
+      <div className="chart-scale" aria-hidden="true"><span>0 {metric.unit}</span><span>{metric.scale / 2} {metric.unit}</span><span>{metric.scale} {metric.unit}</span></div>
+      <ul className="chart-bars">
+        {rows.map(row => (
+          <li className="chart-row" key={row.mode}>
+            <span className="chart-label">{row.mode === 'neural' ? 'Height-feedback SNN' : modeLabel(row.mode)}</span>
+            <div className="chart-track" aria-hidden="true">
+              <div className={'chart-fill' + (row.mode === 'neural' ? ' neural' : '')}
+                style={{ width: metric.value(row) / metric.scale * 100 + '%' }} />
+              <div className="chart-target" style={{ insetInlineStart: lineAt + '%' }} />
+            </div>
+            <strong className="chart-value">{metric.value(row).toFixed(2)}<small> {metric.unit}</small></strong>
+          </li>
+        ))}
+      </ul>
+      <p className="chart-note"><span className="marker-key" aria-hidden="true" />{metric.note}</p>
+    </div>
+  )
+}
+
 function App() {
   const [studyId, setStudyId] = useState<StudyId>('extension_scan')
   const [metricId, setMetricId] = useState<MetricId>('drift')
   const study = studies[studyId]
   const metric = metrics[metricId]
-  const lineAt = metric.reference / metric.scale * 100
 
   return (
     <>
@@ -195,6 +220,7 @@ function App() {
           <nav aria-label="Site navigation" className="site-nav">
             <a href="#story">Iterate</a>
             <a href="#results">Results</a>
+            <a href="#snn">SNN</a>
             <a href="#methods">Protocol</a>
             <a href="#episodes">Episodes</a>
           </nav>
@@ -320,23 +346,7 @@ function App() {
                 </div>
               </div>
 
-              <div className="chart" role="group" aria-label={'Comparison of ' + metric.label.toLowerCase()}>
-                <div className="chart-scale" aria-hidden="true"><span>0 {metric.unit}</span><span>{(metric.scale / 2).toFixed(0)} {metric.unit}</span><span>{metric.scale} {metric.unit}</span></div>
-                <ul className="chart-bars">
-                  {study.data.map(row => (
-                    <li className="chart-row" key={row.mode}>
-                      <span className="chart-label">{modeLabel(row.mode)}</span>
-                      <div className="chart-track" aria-hidden="true">
-                        <div className={'chart-fill' + (row.pass_10_count === row.n ? ' success' : '')}
-                          style={{ width: Math.min(100, metric.value(row) / metric.scale * 100) + '%' }} />
-                        <div className="chart-target" style={{ insetInlineStart: lineAt + '%' }} />
-                      </div>
-                      <strong className="chart-value">{metric.value(row).toFixed(2)}<small> {metric.unit}</small></strong>
-                    </li>
-                  ))}
-                </ul>
-                <p className="chart-note"><span className="marker-key" aria-hidden="true" />{metric.note}</p>
-              </div>
+              <MetricChart metric={metric} rows={study.data} />
 
               <div className="data-bottom">
                 <div className="data-qualifier"><strong>Full-task pass:</strong> one episode must meet the duration, forward-distance, lateral-position, minimum-root-height and peak-yaw limits together.</div>
@@ -374,9 +384,33 @@ function App() {
           </div>
         </section>
 
+        <section className="container section snn-section" id="snn" aria-labelledby="snn-title">
+          <h2 id="snn-title">Why use a spiking neural network?</h2>
+          <div className="snn-explanation">
+            <article>
+              <h3>Why we tested it</h3>
+              <p>The Go2 already used spiking networks for gait and heading. A separate height-feedback SNN let us test whether knee extension could adapt during walking while keeping those two controllers fixed. This experiment measured locomotion in MuJoCo. Energy use and hardware performance were outside its scope.</p>
+            </article>
+            <article>
+              <h3>How we trained it</h3>
+              <p>We used supervised imitation. A hand-written feedback rule supplied target knee extensions based on how far the body was from its target height and how fast it was moving vertically. Two leaky integrate-and-fire layers learned that mapping offline. AdamW minimized prediction error with a small penalty on spike rate. During evaluation, the trained SNN supplied the extension command.</p>
+            </article>
+          </div>
+          <h3>How it performed</h3>
+          <p>On the same three development seeds, the original controller passed {original.pass_10_count} of {original.n} runs and the height-feedback SNN passed {neural.pass_10_count} of {neural.n}. The SNN increased height and reduced heading error, but every SNN run exceeded the final sideways limit.</p>
+          <div className="snn-charts">
+            {(['height', 'yaw', 'drift'] as const).map(id => (
+              <div className="snn-chart" key={id}>
+                <h4>{metrics[id].label}</h4>
+                <MetricChart metric={metrics[id]} rows={[original, neural]} />
+              </div>
+            ))}
+          </div>
+        </section>
+
         <section className="method-section container section" id="methods" aria-labelledby="methods-title">
           <div className="method-intro">
-            <p className="eyebrow section-index">03 — METHODOLOGY</p>
+            <p className="eyebrow section-index">04 — METHODOLOGY</p>
             <h2 id="methods-title">Simulation and<br />evaluation protocol</h2>
           </div>
           <div className="method-grid">

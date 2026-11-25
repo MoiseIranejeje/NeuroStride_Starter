@@ -128,7 +128,7 @@ p { line-height:1.65; }
 .chart-label { font-size:.87rem; font-weight:670; }
 .chart-track { height:22px; background:repeating-linear-gradient(to right,transparent 0,transparent calc(25% - 1px),#dfe7dd calc(25% - 1px),#dfe7dd 25%),#edf2ed; position:relative; }
 .chart-fill { height:100%; background:#9eafa6; position:relative; min-width:1px; transition:width .25s ease; }
-.chart-fill.success { background:#256b57; }
+.chart-fill.neural { background:#256b57; }
 .chart-target { position:absolute; top:-7px; bottom:-7px; border-inline-start:2px dashed #b1764c; pointer-events:none; }
 .chart-value { font-size:.98rem; text-align:end; font-weight:700; font-variant-numeric:tabular-nums; }
 .chart-value small { font-size:.74rem; color:var(--muted); }
@@ -239,3 +239,11 @@ tbody tr:hover { background:#edf4eb; }
   .chart-fill { transition:none; }
   .primary-link, .site-nav a, .header-action { transition:none; }
 }
+
+.snn-section { scroll-margin-top:1.5rem; }
+.snn-explanation { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr)); gap:1.5rem 3rem; margin-block:2rem; }
+.snn-section h3 { font-size:1.65rem; margin-bottom:.65rem; }
+.snn-section p { color:var(--muted); }
+.snn-charts { display:grid; gap:1rem; margin-top:1.5rem; }
+.snn-chart { background:var(--white); border:1px solid var(--hairline); padding:clamp(1rem,3vw,2rem); }
+.snn-chart h4 { font-size:1.1rem; font-weight:700; margin-bottom:1rem; }
